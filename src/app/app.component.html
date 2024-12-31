@@ -1,0 +1,38 @@
+<header>
+  <nav>
+    <ul>
+      <li><a routerLink="/calendar" routerLinkActive="active">Kalendarz</a></li>
+      <li><a routerLink="/availability" routerLinkActive="active">Dostępność</a></li>
+      <li><a routerLink="/absence" routerLinkActive="active">Absencje</a></li>
+      <li><a routerLink="/reservation" routerLinkActive="active">Rezerwacja</a></li>
+      <li><a routerLink="/cart" routerLinkActive="active">Koszyk</a></li>
+      <li><a routerLink="/register" routerLinkActive="active">Rejestracja</a></li>
+      <li><a routerLink="/login" routerLinkActive="active">Logowanie</a></li>
+      <li *ngIf="userRole === 'doctor'"><a routerLink="/doctor-dashboard">Panel lekarza</a></li>
+      <li *ngIf="userRole === 'patient'"><a routerLink="/patient-dashboard">Panel pacjenta</a></li>
+
+      
+      <li><a (click)="onLogout()">Wyloguj</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  
+
+  <div class="data-source-info">
+    <!-- <p style="margin-bottom: 0px;">Aktualne źródło danych: {{ currentSource }}</p> -->
+
+    <div class="choice">
+      <p style="margin-right: 10px;">Wybór źródła danych:</p>
+      <select class="selector" [value]="currentSource" (change)="onSourceChange($event)" style="margin-top: -10px;">
+        <option value="json">Lokalny JSON</option>
+        <option value="firebase">Firebase</option>
+      </select>
+    </div>
+
+  </div>
+  
+
+  <router-outlet></router-outlet>
+</main>

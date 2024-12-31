@@ -1,0 +1,261 @@
+.container-1 {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #485979;
+}
+
+.current-day {
+  border: 2px solid #ccc !important;
+  background-color: #7896CC !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.current-slot {
+  border: 2px solid #7896CC !important;
+  color: #7896CC !important;
+  font-weight: bold;
+}
+
+.week-navigation, .day-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.week-navigation button, .day-navigation button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #7896CC;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.week-navigation button:hover, .day-navigation button:hover {
+  background-color: #485979;
+}
+
+.week-navigation span, .day-navigation span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.view-switch {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.view-switch button {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #485979;
+}
+.view-switch button:hover {
+  background-color: #485979;
+  transition: 0.7s;
+  color: white;
+}
+.view-switch button.active {
+  background-color: #7896CC;
+  color: white;
+  border-color: #485979;
+}
+
+.calendar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calendar-scroll {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  margin-top: 20px;
+}
+
+.t1 {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.t1 th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #f8f8f8;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.t1 td {
+  padding: 0;
+  text-align: center;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  white-space: nowrap;
+  height: 40px;
+  line-height: 30px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.slot {
+  background-color: lightblue;
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+.slot.reserved-past {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+.slot.absent {
+  background-color: #cccccc;
+  pointer-events: none;
+}
+
+.slot.unavailable {
+  background-color: #f0f0f0;
+  pointer-events: none;
+}
+
+.slot.available {
+  background-color: #dff0d8;
+}
+
+.slot.reserved {
+  background-color: #f2dede;
+}
+
+.slot:hover {
+  background-color: #cce5ff;
+}
+
+.details-popup {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.slot::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  word-wrap: break-word;
+  font-size: 12px;
+  white-space: normal;
+  display: none;
+  z-index: 5;
+}
+
+.slot:hover::after {
+  display: block;
+}
+
+
+@media (max-width: 768px) {
+  .calendar-scroll {
+    max-height: 400px;
+  }
+
+  .t1 th, .t1 td {
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  .week-navigation button, .day-navigation button, .view-switch button {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .details-popup {
+    font-size: 10px;
+    padding: 8px;
+  }
+}
+
+
+
+
+.day-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.day-navigation span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.day-navigation button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #7896CC;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.day-navigation button:hover {
+  background-color: #485979;
+}
+
+
+.current-day {
+  border: 2px solid #7896CC !important;
+  background-color: #7896CC !important;
+  color: white !important;
+  font-weight: bold;
+}
+
+.current-slot {
+  border: 2px solid #7896CC !important;
+  font-weight: bold;
+}
+
+.day-view {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: auto;
+  margin-top: 20px;
+}

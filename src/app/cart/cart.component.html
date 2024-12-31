@@ -1,0 +1,25 @@
+<div class="cart-container">
+    <h2>Koszyk rezerwacji</h2>
+  
+    <div *ngIf="reservations.length === 0">
+      <p>Brak zarezerwowanych wizyt.</p>
+    </div>
+  
+    <ul *ngIf="reservations.length > 0">
+      <li *ngFor="let reservation of reservations">
+        <div class="reservation-details">
+          <p><strong>Typ:</strong> {{ reservation.type }}</p>
+          <p><strong>Data:</strong> {{ reservation.date }}</p>
+          <p><strong>Godzina:</strong> {{ reservation.startTime }}</p>
+          <p><strong>Pacjent:</strong> {{ reservation.patientName }}</p>
+          <button (click)="cancelReservation(reservation)">Anuluj</button>
+        </div>
+      </li>
+    </ul>
+  
+    <div *ngIf="reservations.length > 0" class="payment-section">
+      <button (click)="simulatePayment()">Zapłać</button>
+      <p *ngIf="paymentStatus">{{ paymentStatus }}</p>
+    </div>
+  </div>
+  

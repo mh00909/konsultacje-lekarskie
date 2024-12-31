@@ -1,0 +1,44 @@
+.availability-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+  }
+  
+  fieldset {
+    margin-bottom: 20px;
+    border: 1px solid #7896CC;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  legend {
+    font-weight: bold;
+    color: #7896CC;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  input, select, button {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+  }
+  
+  button {
+    background-color: #7896CC;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #3c4b68;
+  }
+  

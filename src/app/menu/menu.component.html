@@ -1,0 +1,9 @@
+<nav>
+    <ul>
+      <li *ngIf="!currentUser"><a routerLink="/register">Rejestracja</a></li>
+      <li *ngIf="!currentUser"><a routerLink="/login">Logowanie</a></li>
+      <li *ngIf="currentUser"><a (click)="onLogout()">Wylogowanie</a></li>
+    </ul>
+    <p *ngIf="currentUser">Zalogowany jako: {{ currentUser.email }}</p>
+  </nav>
+  

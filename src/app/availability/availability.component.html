@@ -1,0 +1,34 @@
+<div class="availability-container">
+    <h2>Dostępności</h2>
+  
+    <form [formGroup]="cyclicAvailabilityForm" (ngSubmit)="onSubmitCyclicAvailability()">
+      <h3>Cykliczna dostępność</h3>
+      <label>Data rozpoczęcia: <input type="date" formControlName="startDate" /></label>
+      <label>Data zakończenia: <input type="date" formControlName="endDate" /></label>
+      <label>Dni tygodnia:
+        <select multiple formControlName="days">
+          <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+        </select>
+      </label>
+      <label>Godzina rozpoczęcia: <input type="time" formControlName="startTime" /></label>
+      <label>Godzina zakończenia: <input type="time" formControlName="endTime" /></label>
+      <button type="submit">Dodaj</button>
+    </form>
+    
+    <form [formGroup]="oneTimeAvailabilityForm" (ngSubmit)="onSubmitOneTimeAvailability()">
+      <h3>Jednorazowa dostępność</h3>
+      <label>Data: <input type="date" formControlName="date" /></label>
+      <label>Godzina rozpoczęcia: <input type="time" formControlName="startTime" /></label>
+      <label>Godzina zakończenia: <input type="time" formControlName="endTime" /></label>
+      <button type="submit">Dodaj</button>
+    </form>
+    
+    <ul>
+      <li *ngFor="let availability of availabilities">
+        {{ availability | json }}
+        <button (click)="removeAvailability(availability.id)">Usuń</button>
+      </li>
+    </ul>
+    
+    </div>
+    

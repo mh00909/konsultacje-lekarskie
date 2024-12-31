@@ -1,0 +1,21 @@
+<div class="absence-container">
+    <h2>Dodaj nieobecność</h2>
+  
+    <form [formGroup]="absenceForm" (ngSubmit)="onSubmitAbsence()">
+      <label>
+        Wybierz datę:
+        <input type="date" formControlName="date" />
+      </label>
+  
+      <button type="submit">Dodaj nieobecność</button>
+    </form>
+  
+    <h3 style="margin-top:10px">Lista nieobecności</h3>
+    <ul>
+      <li *ngFor="let absence of absences">
+        {{ absence.date }}
+        <button (click)="removeAbsence(absence)">Usuń</button>
+      </li>
+    </ul>
+  </div>
+  

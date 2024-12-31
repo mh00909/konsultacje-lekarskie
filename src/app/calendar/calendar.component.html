@@ -1,0 +1,105 @@
+<div class="container-1">
+  <div class="calendar-container">
+    <h2>Harmonogram lekarza</h2>
+    
+    <div class="view-switch">
+      <button [class.active]="viewMode === 'week'" (click)="changeViewMode('week')">Widok tygodniowy</button>
+      <button [class.active]="viewMode === 'day'" (click)="changeViewMode('day')">Widok dzienny</button>
+    </div>
+    
+    <div *ngIf="viewMode === 'week'" class="week-navigation">
+      <button (click)="changeWeek(-1)">Poprzedni tydzień</button>
+      <span>{{ currentWeekStart | date: 'yyyy-MM-dd' }} - {{ getDateForDay(6) }}</span>
+      <button (click)="changeWeek(1)">Następny tydzień</button>
+    </div>
+    
+    <div *ngIf="viewMode === 'week'" class="calendar-scroll">
+      <table class="t1">
+        <thead>
+          <tr>
+            <th>Godzina</th>
+            <th 
+              *ngFor="let day of days; let i = index" 
+              [ngClass]="{ 'current-day': isCurrentDay(day) }"
+            >
+              {{ day }} <br />
+              {{ getDateForDay(i) }} <br />
+              Zarezerwowane: {{ getReservationsCountForDay(i) }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let time of timeSlots">
+            <td>{{ time }}</td>
+            <td 
+              *ngFor="let day of days; let i = index"
+              class="slot"
+              [ngClass]="{
+                'current-slot': isCurrentSlot(day, time),
+                'available': getSlotStatus(day, time) === 'available',
+                'reserved': getSlotStatus(day, time) === 'reserved',
+                'absent': getSlotStatus(day, time) === 'absent'
+              }"
+              [ngStyle]="{ 'background-color': getConsultationColor(day, time) }"
+              (click)="handleSlotClick(day, time)"
+              (mouseover)="showDetails(day, time, $event)"
+              (mouseout)="hideDetails()"
+            >
+              <span *ngIf="getSlotDetails(day, time)">{{ getSlotDetails(day, time) }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+   
+    <div *ngIf="viewMode === 'day'" >
+      <div class="day-navigation">
+        <button (click)="changeDay(-1)">Poprzedni dzień</button>
+        <span>
+          {{ days[selectedDayIndex] }} - {{ getSelectedDayDate() }}
+          <br />
+      Liczba wizyt: {{ getReservationsCountForSelectedDay() }}
+        </span>
+        <button (click)="changeDay(1)">Następny dzień</button>
+      </div>
+      <div class="day-view">
+        <table class="t1">
+        <thead>
+          <tr>
+            <th>Godzina</th>
+            <th>{{ days[selectedDayIndex] }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let time of timeSlots">
+            <td>{{ time }}</td>
+            <td 
+              class="slot"
+              [ngClass]="{
+                'current-slot': isCurrentSlot(days[selectedDayIndex], time),
+                'available': getSlotStatus(days[selectedDayIndex], time) === 'available',
+                'reserved': getSlotStatus(days[selectedDayIndex], time) === 'reserved',
+                'absent': getSlotStatus(days[selectedDayIndex], time) === 'absent'
+              }"
+              [ngStyle]="{ 'background-color': getConsultationColor(days[selectedDayIndex], time) }"
+              (click)="handleSlotClick(days[selectedDayIndex], time)"
+              (mouseover)="showDetails(days[selectedDayIndex], time, $event)"
+              (mouseout)="hideDetails()"
+            >
+              <span *ngIf="getSlotDetails(days[selectedDayIndex], time)">{{ getSlotDetails(days[selectedDayIndex], time) }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="details-popup" *ngIf="detailsVisible" [ngStyle]="detailsPosition">
+    <p><strong>Typ:</strong> {{ selectedDetails?.type }}</p>
+    <p><strong>Pacjent:</strong> {{ selectedDetails?.patientName }}</p>
+    <p><strong>Godzina:</strong> {{ selectedDetails?.startTime }}</p>
+    <p><strong>Data:</strong> {{ selectedDetails?.date }}</p>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="reservation-container">
+    <h2>Rezerwacja konsultacji</h2>
+  
+    <form [formGroup]="reservationForm" (ngSubmit)="onSubmitReservation()">
+      <label>
+        Data konsultacji:
+        <input type="date" formControlName="date" />
+      </label>
+      <label>
+        Godzina rozpoczęcia:
+        <input type="time" formControlName="startTime" />
+      </label>
+      <label>
+        Długość konsultacji (w godzinach):
+        <select formControlName="duration">
+          <option *ngFor="let option of durations" [value]="option">{{ option }}</option>
+        </select>
+      </label>
+      <label>
+        Typ konsultacji:
+        <select formControlName="type">
+          <option *ngFor="let type of consultationTypes" [value]="type">{{ type }}</option>
+        </select>
+      </label>
+      <label>
+        Imię i nazwisko pacjenta:
+        <input type="text" formControlName="patientName" />
+      </label>
+      <label>
+        Płeć pacjenta:
+        <select formControlName="gender">
+          <option value="female">Kobieta</option>
+          <option value="male">Mężczyzna</option>
+          <option value="other">Inne</option>
+        </select>
+      </label>
+      <label>
+        Wiek pacjenta:
+        <input type="number" formControlName="age" />
+      </label>
+      <label>
+        Informacje dla lekarza:
+        <textarea formControlName="notes"></textarea>
+      </label>
+  
+      <button type="submit">Zarezerwuj</button>
+    </form>
+  </div>
+  <div *ngIf="reservationForm.invalid && reservationForm.touched">
+    <p *ngIf="reservationForm.get('date')?.invalid">Data jest wymagana.</p>
+    <p *ngIf="reservationForm.get('startTime')?.invalid">Godzina rozpoczęcia jest wymagana.</p>
+    <p *ngIf="reservationForm.get('duration')?.invalid">Czas trwania jest wymagany i musi być większy niż 0.</p>
+    <p *ngIf="reservationForm.get('type')?.invalid">Typ konsultacji jest wymagany.</p>
+    <p *ngIf="reservationForm.get('patientName')?.invalid">Imię i nazwisko pacjenta są wymagane.</p>
+    <p *ngIf="reservationForm.get('gender')?.invalid">Płeć pacjenta jest wymagana.</p>
+    <p *ngIf="reservationForm.get('age')?.invalid">Wiek pacjenta jest wymagany i musi być większy niż 0.</p>
+  </div>
+  

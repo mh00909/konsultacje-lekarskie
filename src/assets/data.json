@@ -1,0 +1,237 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "user1@example.com",
+      "role": "patient"
+    },
+    {
+      "id": "2",
+      "email": "user2@example.com",
+      "role": "doctor"
+    }
+  ],
+  "availabilities": [
+    {
+      "id": "1",
+      "startDate": "2024-12-27",
+      "endDate": "2024-12-30",
+      "days": [
+        "Monday",
+        "Tuesday"
+      ],
+      "startTime": "09:00",
+      "endTime": "17:00"
+    },
+    {
+      "id": "74b9",
+      "startDate": "2024-11-07",
+      "endDate": "2025-03-05",
+      "days": [
+        "Poniedziałek",
+        "Czwartek"
+      ],
+      "startTime": "01:00",
+      "endTime": "20:00"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "1",
+      "date": "2024-12-28",
+      "startTime": "10:00",
+      "duration": 30,
+      "type": "consultation",
+      "patientName": "John Doe",
+      "gender": "male",
+      "age": 30,
+      "notes": "Follow-up consultation",
+      "slots": [
+        "10:00",
+        "10:30"
+      ]
+    },
+    {
+      "id": "0f6c",
+      "date": "2024-12-28",
+      "startTime": "13:00",
+      "duration": "1",
+      "type": "Choroba przewlekła",
+      "patientName": "Zofia Kowalska",
+      "gender": "female",
+      "age": 60,
+      "notes": "",
+      "slots": [
+        "13:00",
+        "13:30"
+      ]
+    },
+    {
+      "id": "e365",
+      "date": "2024-12-30",
+      "startTime": "14:30",
+      "duration": "1",
+      "type": "Choroba przewlekła",
+      "patientName": "Teresa Nowak",
+      "gender": "female",
+      "age": 70,
+      "notes": "",
+      "slots": [
+        "14:30",
+        "15:00"
+      ]
+    },
+    {
+      "id": "3034",
+      "date": "2024-12-30",
+      "startTime": "12:30",
+      "duration": "0.5",
+      "type": "Pierwsza wizyta",
+      "patientName": "Anna Nowak",
+      "gender": "female",
+      "age": 50,
+      "notes": "",
+      "slots": [
+        "12:30"
+      ]
+    },
+    {
+      "id": "3e9c",
+      "date": "2024-12-30",
+      "startTime": "12:00",
+      "duration": "0.5",
+      "type": "Pierwsza wizyta",
+      "patientName": "Kacper Nowak",
+      "gender": "male",
+      "age": 50,
+      "notes": "",
+      "slots": [
+        "12:00"
+      ]
+    },
+    {
+      "id": "d78a",
+      "date": "2024-12-30",
+      "startTime": "13:30",
+      "duration": "1",
+      "type": "Wizyta kontrolna",
+      "patientName": "aaaa",
+      "gender": "female",
+      "age": 55,
+      "notes": "",
+      "slots": [
+        "13:30",
+        "14:00"
+      ]
+    },
+    {
+      "id": "7c73",
+      "date": "2024-12-29",
+      "startTime": "20:00",
+      "duration": "1.5",
+      "type": "Wizyta kontrolna",
+      "patientName": "Ewa Mirek",
+      "gender": "female",
+      "age": 50,
+      "notes": "",
+      "slots": [
+        "20:00",
+        "20:30",
+        "21:00"
+      ]
+    },
+    {
+      "id": "7f29",
+      "date": "2024-12-30",
+      "startTime": "20:00",
+      "duration": "1",
+      "type": "Wizyta kontrolna",
+      "patientName": "qqqq",
+      "gender": "female",
+      "age": 1111,
+      "notes": "",
+      "slots": [
+        "20:00",
+        "20:30"
+      ]
+    },
+    {
+      "id": "6a01",
+      "date": "2025-01-01",
+      "startTime": "19:00",
+      "duration": "2",
+      "type": "Wizyta kontrolna",
+      "patientName": "22",
+      "gender": "female",
+      "age": 222,
+      "notes": "",
+      "slots": [
+        "19:00",
+        "19:30",
+        "20:00",
+        "20:30"
+      ]
+    },
+    {
+      "id": "90cc",
+      "date": "2024-12-30",
+      "startTime": "18:00",
+      "duration": "0.5",
+      "type": "Wizyta kontrolna",
+      "patientName": "www",
+      "gender": "female",
+      "age": 44,
+      "notes": "",
+      "slots": [
+        "18:00"
+      ]
+    },
+    {
+      "id": "e0db",
+      "date": "2024-12-30",
+      "startTime": "19:00",
+      "duration": "1",
+      "type": "Recepta",
+      "patientName": "ttt",
+      "gender": "male",
+      "age": 33,
+      "notes": "",
+      "slots": [
+        "19:00",
+        "19:30"
+      ]
+    },
+    {
+      "id": "10ef",
+      "date": "2024-12-30",
+      "startTime": "18:30",
+      "duration": "0.5",
+      "type": "Choroba przewlekła",
+      "patientName": "rr",
+      "gender": "other",
+      "age": 555,
+      "notes": "",
+      "slots": [
+        "18:30"
+      ]
+    }
+  ],
+  "absences": [
+    {
+      "id": "1",
+      "date": "2024-12-21"
+    },
+    {
+      "id": "d92b",
+      "date": "2024-12-31"
+    },
+    {
+      "id": "ac10",
+      "date": "2024-12-28"
+    },
+    {
+      "id": "8b2a",
+      "date": "2025-01-01"
+    }
+  ]
+}
