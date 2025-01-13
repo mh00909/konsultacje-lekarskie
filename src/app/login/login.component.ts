@@ -1,40 +1,34 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  standalone: false,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin(): void {
-    this.authService.login(this.email, this.password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        if (user) {
-          this.authService.getUserRole(user.uid).subscribe({
-            next: (data) => {
-              if (data && data.role) {
-                localStorage.setItem('user', JSON.stringify({ email: user.email, role: data.role }));
-                alert(`Zalogowano jako ${data.role}`);
-              } else {
-                alert('Brak przypisanej roli użytkownika.');
-              }
-            },
-            error: (err) => {
-              alert(`Błąd odczytu roli użytkownika: ${err.message}`);
-            }
-          });
+    this.authService.login(this.email, this.password).subscribe({
+      next: (user) => {
+        localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role }));
+        alert(`Zalogowano jako ${user.role}`);
+
+        if (user.role === 'doctor') {
+          localStorage.setItem('doctorId', user.id); 
         }
-      })
-      .catch(error => alert(`Błąd: ${error.message}`));
+        localStorage.setItem('userRole', user.role); 
+        localStorage.setItem('userEmail', user.email);
+        
+        location.reload()
+        location.replace('/home')
+      },
+      error: (err) => alert(`Błąd: ${err.message}`)
+    });
   }
-  
-  
 }

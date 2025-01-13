@@ -17,7 +17,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { MenuComponent } from './menu/menu.component';
+//import { MenuComponent } from './menu/menu.component';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -25,7 +25,11 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from '../environments/environment.prod';
 import { DataSourceSelectorComponent } from './data-source-selector/data-source-selector.component';
-import { DataListComponent } from './data-list/data-list.component';
+//import { DataListComponent } from './data-list/data-list.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { DoctorListComponent } from './doctor-list/doctor-list.component';
+import { HomeComponent } from './home/home.component';
+import { UsersListComponent } from './users-list/users-list.component';
 
 @NgModule({
   declarations: [
@@ -37,9 +41,13 @@ import { DataListComponent } from './data-list/data-list.component';
     ReservationComponent,
     RegisterComponent,
     LoginComponent,
-    MenuComponent,
+   // MenuComponent,
     DataSourceSelectorComponent,
-    DataListComponent
+   // DataListComponent,
+    UnauthorizedComponent,
+    DoctorListComponent,
+    HomeComponent,
+    UsersListComponent
   ],
   imports: [
     BrowserModule,

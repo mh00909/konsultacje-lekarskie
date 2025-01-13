@@ -2,12 +2,15 @@
   display: flex;
   justify-content: center;
   margin: 20px;
+  margin-top: 80px;
 }
 
-h2 {
+h1 {
   text-align: center;
-  font-size: 24px;
+  font-size: 32px;
   color: #485979;
+  margin-bottom: 20px;
+  margin-top: -20px;
 }
 
 .current-day {
@@ -74,8 +77,8 @@ h2 {
 .view-switch button.active {
   background-color: #7896CC;
   color: white;
-  border-color: #485979;
 }
+
 
 .calendar-container {
   width: 100%;
@@ -254,8 +257,9 @@ h2 {
 }
 
 .day-view {
-  max-height: 600px;
+  max-height: 580x;
   overflow-y: auto;
   overflow-x: auto;
   margin-top: 20px;
+  max-height: 600px;
 }

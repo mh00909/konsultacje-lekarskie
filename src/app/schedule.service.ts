@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, take } from 'rxjs';
 import { DataSourceManagerService } from './data-source-manager.service';
 
 interface Availability {
   id?: string;
+  doctorId: string;
   startDate: string;
   endDate: string;
   days: string[];
@@ -13,6 +14,7 @@ interface Availability {
 
 interface OneTimeAvailability {
   id?: string;
+  doctorId: string;
   date: string;
   startTime: string;
   endTime: string;
@@ -20,11 +22,14 @@ interface OneTimeAvailability {
 
 interface Absence {
   id?: string;
+  doctorId: string;
   date: string;
 }
 
 interface Reservation {
   id?: string;
+  doctorId: string;
+  patientId: string;
   date: string;
   startTime: string;
   duration: number;
@@ -53,10 +58,16 @@ export class ScheduleService {
 
   fetchAvailabilities(): void {
     const dataSource = this.dataSourceManager.getDataSource();
-    dataSource.getData('availabilities').subscribe(data => {
-      this.availabilitySubject.next(data);
+    dataSource.getData('availabilities').pipe(take(1)).subscribe({
+      next: (data) => {
+        this.availabilitySubject.next(data);
+      },
+      error: (err) => {
+        console.error('Błąd podczas pobierania dostępności:', err);
+      }
     });
   }
+  
 
   addAvailability(availability: Availability): void {
     const dataSource = this.dataSourceManager.getDataSource();
@@ -99,18 +110,43 @@ export class ScheduleService {
 
   fetchReservations(): void {
     const dataSource = this.dataSourceManager.getDataSource();
-    dataSource.getData('reservations').subscribe(data => {
-      this.reservationsSubject.next(data);
+    dataSource.getData('reservations').pipe(take(1)).subscribe({
+      next: (data) => {
+        this.reservationsSubject.next(data); 
+      },
+      error: (err) => {
+        console.error('Błąd podczas pobierania rezerwacji:', err);
+      }
     });
   }
+  
 
+  isProcessing = false;
   addReservation(reservation: Reservation): void {
+    if (this.isProcessing) return; 
+  
+    if (this.isConflict(reservation)) {
+      alert('Termin jest już zajęty lub koliduje z nieobecnością.');
+      return; 
+    }
+  
+    this.isProcessing = true; 
+  
     const dataSource = this.dataSourceManager.getDataSource();
     dataSource.addData('reservations', reservation).subscribe({
-      next: () => this.fetchReservations(),
-      error: (err) => console.error(`Błąd podczas dodawania rezerwacji: ${err.message}`),
+      next: () => {
+        this.fetchReservations(); 
+        alert('Rezerwacja została potwierdzona.');
+        this.isProcessing = false; 
+      },
+      error: (err) => {
+        alert(`Błąd podczas rejestracji rezerwacji: ${err.message}`);
+        this.isProcessing = false; 
+      }
     });
   }
+  
+  
 
   removeReservation(reservationId: string): void {
     const dataSource = this.dataSourceManager.getDataSource();

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { DataSourceManagerService } from '../data-source-manager.service';
 
@@ -13,7 +13,6 @@ const CONSULTATION_COLORS: { [key: string]: string } = {
 @Component({
   selector: 'app-calendar',
   standalone: false,
-  
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css'
 })
@@ -34,14 +33,16 @@ export class CalendarComponent implements OnInit {
   reservations: any[] = [];
   availabilities: any[] = [];
   currentWeekStart: Date = this.getStartOfWeek(new Date());
+  doctorId: string | null = null;
 
   selectedDetails: any = null;
   detailsVisible = false; 
   detailsPosition = { top: '0px', left: '0px' }; 
 
-  constructor(private dataSourceManager: DataSourceManagerService, private router: Router) {}
+  constructor(private dataSourceManager: DataSourceManagerService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.doctorId = this.activatedRoute.snapshot.paramMap.get('doctorId');
     this.dataSourceManager.onDataSourceChange().subscribe(() => {
       this.fetchData();
     });
@@ -49,25 +50,29 @@ export class CalendarComponent implements OnInit {
   }
 
   fetchData(): void {
+    if (!this.doctorId) {
+      console.error('Brak doctorId w parametrach trasy');
+      return;
+    }
     const dataSource = this.dataSourceManager.getDataSource();
-
-    dataSource.getData('reservations').subscribe(data => {
-      this.reservations = data;
-    });
-
+  
     dataSource.getData('availabilities').subscribe(data => {
-      this.availabilities = data;
+      this.availabilities = data.filter(a => a.doctorId === this.doctorId);
     });
-
+  
     dataSource.getData('absences').subscribe(data => {
-      this.absences = data;
+      this.absences = data.filter(a => a.doctorId === this.doctorId);
+    });
+  
+    dataSource.getData('reservations').subscribe(data => {
+      this.reservations = data.filter(r => r.doctorId === this.doctorId);
     });
   }
   
 
   getStartOfWeek(date: Date): Date {
     const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Poniedziałek jako pierwszy dzień tygodnia
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
     return new Date(date.setDate(diff));
   }
 
@@ -78,8 +83,11 @@ export class CalendarComponent implements OnInit {
   }
 
   changeWeek(offset: number): void {
-    this.currentWeekStart.setDate(this.currentWeekStart.getDate() + offset * 7);
+    const newDate = new Date(this.currentWeekStart);
+    newDate.setDate(this.currentWeekStart.getDate() + offset * 7);
+    this.currentWeekStart = this.getStartOfWeek(newDate);
   }
+  
 
   getReservationsCountForDay(index: number): number {
     const date = this.getDateForDay(index);
@@ -94,32 +102,43 @@ export class CalendarComponent implements OnInit {
   
     if (reservation) {
       return this.isSlotAbsent(day)
-        ? 'Odwołane' // Jeśli jest absencja, oznacz jako odwołane
-        : reservation.type; // Inaczej wyświetl typ rezerwacji
+        ? 'Odwołane' 
+        : reservation.type;
     }
     if (this.isSlotAbsent(day)) {
-      return ''; // Usuń napis "Wolne" w przypadku absencji
+      return ''; 
     }
   
-    // Jeśli slot jest dostępny
     if (this.isSlotAvailable(day, time)) {
-      return 'Wolne'; // Wyświetl napis "Wolne"
+      return 'Wolne';
     }
   
     return '';
   }
   
+  isProcessing = false;
   handleSlotClick(day: string, time: string): void {
+    if (!this.doctorId) {
+      console.error('Brak doctorId - brak możliwości wykonania akcji');
+      return;
+    }
+    if (this.isProcessing) {
+      return; // Zablokuj wielokrotne kliknięcia
+    }
+  
     const date = this.getDateForDay(this.days.indexOf(day));
     const status = this.getSlotStatus(day, time);
-
+  
     if (status === 'available') {
-      this.router.navigate(['/reservation'], { queryParams: { date, time } });
+      this.isProcessing = true; // Zablokuj dalsze kliknięcia
+      this.router.navigate(['/reservation'], { queryParams: { date, time, doctorId: this.doctorId } }).then(() => {
+        this.isProcessing = false; // Odblokuj po zakończeniu 
+      });
     } else if (status === 'reserved') {
       const reservation = this.reservations.find(
         (r) => r.date === date && r.startTime === time
       );
-
+  
       if (reservation) {
         const confirmCancel = confirm(
           `Czy na pewno chcesz anulować wizytę?\n\n` +
@@ -128,7 +147,7 @@ export class CalendarComponent implements OnInit {
           `Godzina: ${reservation.startTime}\n` +
           `Pacjent: ${reservation.patientName}`
         );
-
+  
         if (confirmCancel) {
           this.cancelReservation(reservation);
         }
@@ -139,14 +158,13 @@ export class CalendarComponent implements OnInit {
       alert('Ten termin nie jest dostępny.');
     }
   }
-
+  
   cancelReservation(reservation: any): void {
     const dataSource = this.dataSourceManager.getDataSource();
   
-    // Usunięcie danych za pomocą dynamicznego źródła
     dataSource.removeData('reservations', reservation.id).subscribe({
       next: () => {
-        // Usunięcie rezerwacji z lokalnej listy (optymalizacja UI)
+        // Usunięcie rezerwacji z lokalnej listy 
         this.reservations = this.reservations.filter(r => r.id !== reservation.id);
         alert('Rezerwacja została anulowana.');
       },
@@ -162,7 +180,8 @@ export class CalendarComponent implements OnInit {
 
     return this.availabilities.some(
       (availability) =>
-        availability.days &&
+        Array.isArray(availability.days) &&
+        availability.days.includes(day) &&
       availability.startTime <= time &&
       availability.endTime >= time &&
       new Date(availability.startDate) <= new Date(date) &&
@@ -230,12 +249,10 @@ export class CalendarComponent implements OnInit {
       (r) => r.date === date && r.slots.includes(time)
     );
   
-    // Jeśli jest absencja i istnieje rezerwacja, ustaw kolor na czerwony
     if (reservation && this.isSlotAbsent(day)) {
       return '#ff0000'; // Kolor czerwony dla odwołanych
     }
   
-    // Jeśli jest rezerwacja, ustaw jej odpowiedni kolor
     if (reservation && reservation.type) {
       return CONSULTATION_COLORS[reservation.type] || '#cccccc';
     }
@@ -275,13 +292,13 @@ export class CalendarComponent implements OnInit {
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinutes = now.getMinutes();
-    const currentTime = currentHour * 60 + currentMinutes; // Convert current time to total minutes
+    const currentTime = currentHour * 60 + currentMinutes; 
   
     const slotStartHour = parseInt(time.split(':')[0], 10);
     const slotStartMinutes = parseInt(time.split(':')[1], 10);
     const slotStartTime = slotStartHour * 60 + slotStartMinutes;
   
-    const slotEndTime = slotStartTime + 30; // Assuming each slot is 30 minutes
+    const slotEndTime = slotStartTime + 30;
   
     const date = this.getDateForDay(this.days.indexOf(day));
     
@@ -295,7 +312,7 @@ export class CalendarComponent implements OnInit {
   changeViewMode(mode: 'week' | 'day'): void {
     this.viewMode = mode;
     if (mode === 'day') {
-      this.selectedDayIndex = new Date().getDay() - 1; // Ustaw domyślnie na dzisiejszy dzień
+      this.selectedDayIndex = new Date().getDay() - 1; 
     }
   }
 
@@ -303,9 +320,9 @@ export class CalendarComponent implements OnInit {
     if (this.viewMode === 'day') {
       this.selectedDayIndex += offset;
       if (this.selectedDayIndex < 0) {
-        this.selectedDayIndex = 6; // Wracamy do niedzieli
+        this.selectedDayIndex = 6;
       } else if (this.selectedDayIndex > 6) {
-        this.selectedDayIndex = 0; // Wracamy do poniedziałku
+        this.selectedDayIndex = 0; 
       }
     }
   }

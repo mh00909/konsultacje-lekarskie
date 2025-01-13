@@ -1,10 +1,14 @@
-<h2>Rejestracja</h2>
+<div class="register-container">
+  <h2>Rejestracja</h2>
 <form (ngSubmit)="onRegister()">
   <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
   <input type="password" [(ngModel)]="password" name="password" placeholder="Hasło" required />
   <select [(ngModel)]="role" name="role" required>
     <option value="patient">Pacjent</option>
     <option value="doctor">Lekarz</option>
+    <option value="admin">Admin</option>
   </select>
   <button type="submit">Zarejestruj</button>
 </form>
+
+</div>

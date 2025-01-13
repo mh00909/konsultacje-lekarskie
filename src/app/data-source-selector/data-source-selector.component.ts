@@ -9,8 +9,10 @@ export class DataSourceSelectorComponent {
   constructor(private dataSourceManager: DataSourceManagerService) {}
 
   onSourceChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value; 
-    this.dataSourceManager.setDataSource(value as 'json' | 'firebase');
+    const value = (event.target as HTMLSelectElement).value as 'json' | 'firebase';
+    this.dataSourceManager.setDataSource(value);
+    localStorage.setItem('dataSource', value); 
   }
+  
   
 }

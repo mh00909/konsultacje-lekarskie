@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  standalone: false,
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
@@ -15,17 +15,12 @@ export class RegisterComponent {
   constructor(private authService: AuthService) {}
 
   onRegister(): void {
-    this.authService.register(this.email, this.password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        if (user) {
-          this.authService.addUserToFirestore(user.uid, this.email, this.role)
-            .then(() => alert('Rejestracja zakończona sukcesem!'))
-            .catch(error => alert(`Błąd podczas zapisu użytkownika: ${error.message}`));
-        }
-      })
-      .catch(error => alert(`Błąd: ${error.message}`));
+    this.authService.register(this.email, this.password, this.role).subscribe({
+      next: () => alert('Rejestracja zakończona sukcesem!'),
+      error: (err) => alert(`Błąd podczas rejestracji: ${err.message}`)
+    });
+
+    location.reload()
+    location.replace('/login')
   }
-  
-  
 }

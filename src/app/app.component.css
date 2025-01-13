@@ -12,10 +12,12 @@ header {
     padding: 0;
     display: flex;
     justify-content: center;
+   
   }
   
   nav ul li {
     margin: 0 15px;
+    
   }
   
   nav ul li a {
@@ -23,10 +25,12 @@ header {
     color: white;
     font-weight: bold;
     transition: color 0.3s;
+    text-decoration: none;
+    
   }
   
   nav ul li a.active {
-    text-decoration: underline;
+    text-decoration: none;
   }
   
   nav ul li a:hover {
@@ -79,3 +83,7 @@ header {
     background-color: rgb(240, 240, 240);
     color: #485979;
   }
+
+  .icon-spacing {
+  margin-right: 8px; 
+}

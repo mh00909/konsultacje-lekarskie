@@ -14,12 +14,15 @@ export class DataSourceManagerService {
 
   constructor(
     private localJsonService: LocalJsonService,
-    private firebaseDataService: FirebaseDataService
+    private firebaseDataService: FirebaseDataService,
   ) {
-    this.setDataSource(environment.dataSource as 'json' | 'firebase'); 
+    //this.setDataSource(environment.dataSource as 'json' | 'firebase' ); 
+    this.initializeDataSource();
+  
   }
 
-  setDataSource(source: 'json' | 'firebase'): void {
+  setDataSource(source: 'json' | 'firebase' ): void {
+    console.log('Ustawianie źródła danych:', source);
     switch (source) {
       case 'json':
         this.currentDataSource = this.localJsonService;
@@ -27,9 +30,12 @@ export class DataSourceManagerService {
       case 'firebase':
         this.currentDataSource = this.firebaseDataService;
         break;
+      
+
       default:
         throw new Error(`Nieznane źródło danych: ${source}`);
     }
+    localStorage.setItem('dataSource', source);
     this.dataSourceSubject.next(source); 
   }
 
@@ -39,5 +45,10 @@ export class DataSourceManagerService {
 
   onDataSourceChange(): BehaviorSubject<string> {
     return this.dataSourceSubject;
+  }
+  initializeDataSource(): void {
+    const savedSource = localStorage.getItem('dataSource') as 'json' | 'firebase';
+    const sourceToSet = savedSource || environment.dataSource; // Jeśli nie ma w LocalStorage, użyj domyślnego
+    this.setDataSource(sourceToSet);
   }
 }

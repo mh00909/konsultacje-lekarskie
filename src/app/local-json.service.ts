@@ -7,7 +7,7 @@ import { DataSource } from './data-source.interface';
   providedIn: 'root',
 })
 export class LocalJsonService implements DataSource {
-  private baseUrl = 'http://localhost:3000'; 
+  private baseUrl = 'http://localhost:3001'; 
 
   constructor(private http: HttpClient) {}
 
@@ -16,6 +16,7 @@ export class LocalJsonService implements DataSource {
   }
 
   addData(collectionName: string, data: any): Observable<any> {
+    console.log('Dodawanie danych w LocalJsonService:', collectionName, data);
     return this.http.post<any>(`${this.baseUrl}/${collectionName}`, data);
   }
 

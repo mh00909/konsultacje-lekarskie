@@ -1,6 +1,25 @@
 h2 {
-    text-align: center;
-  }
+  text-align: center;
+  color: #3d4a63;
+  margin-bottom: 20px;
+}
+
+.register-container {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 600px;
+  height: 300px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
   
   form {
     max-width: 300px;

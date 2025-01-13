@@ -28,23 +28,38 @@ export class AvailabilityComponent implements OnInit {
       endTime: [''],
     });
   }
-
   ngOnInit(): void {
     this.loadAvailabilities();
     this.dataSourceManager.onDataSourceChange().subscribe(() => this.loadAvailabilities());
   }
-
+  
   loadAvailabilities(): void {
     const dataSource = this.dataSourceManager.getDataSource();
+    const doctorId = localStorage.getItem('doctorId'); 
+  
+    if (!doctorId) {
+      console.error('Brak doctorId w LocalStorage');
+      return;
+    }
+  
     dataSource.getData('availabilities').subscribe(data => {
-      this.availabilities = data;
+      this.availabilities = data.filter(a => a.doctorId === doctorId);
     });
   }
-
+  
   onSubmitCyclicAvailability(): void {
-    const availability = this.cyclicAvailabilityForm.value;
+    const doctorId = localStorage.getItem('doctorId'); 
+    if (!doctorId) {
+      alert('Brak doctorId. Nie można dodać dostępności.');
+      return;
+    }
+  
+    const availability = {
+      ...this.cyclicAvailabilityForm.value,
+      doctorId 
+    };
     const dataSource = this.dataSourceManager.getDataSource();
-
+  
     dataSource.addData('availabilities', availability).subscribe({
       next: () => {
         alert('Cykliczna dostępność została dodana!');
@@ -54,12 +69,30 @@ export class AvailabilityComponent implements OnInit {
       error: (err) => alert(`Błąd: ${err.message}`)
     });
   }
-
+  
   onSubmitOneTimeAvailability(): void {
+    const doctorId = localStorage.getItem('doctorId');
+    if (!doctorId) {
+      alert('Brak doctorId. Nie można dodać dostępności.');
+      return;
+    }
+  
     const availability = this.oneTimeAvailabilityForm.value;
+    const date = new Date(availability.date);
+    const dayMapping: string[] = [
+      'Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'
+    ];
+    const dayOfWeek = dayMapping[date.getDay()];
+  
+    const completeAvailability = {
+      ...availability,
+      days: [dayOfWeek], 
+      doctorId 
+    };
+  
     const dataSource = this.dataSourceManager.getDataSource();
-
-    dataSource.addData('availabilities', availability).subscribe({
+  
+    dataSource.addData('availabilities', completeAvailability).subscribe({
       next: () => {
         alert('Jednorazowa dostępność została dodana!');
         this.oneTimeAvailabilityForm.reset();
@@ -68,16 +101,5 @@ export class AvailabilityComponent implements OnInit {
       error: (err) => alert(`Błąd: ${err.message}`)
     });
   }
-
-  removeAvailability(availabilityId: string): void {
-    const dataSource = this.dataSourceManager.getDataSource();
-
-    dataSource.removeData('availabilities', availabilityId).subscribe({
-      next: () => {
-        alert('Dostępność została usunięta.');
-        this.loadAvailabilities();
-      },
-      error: (err) => alert(`Błąd: ${err.message}`)
-    });
-  }
+  
 }

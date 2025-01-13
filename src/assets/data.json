@@ -9,6 +9,13 @@
       "id": "2",
       "email": "user2@example.com",
       "role": "doctor"
+    },
+    {
+      "id": "ce8e",
+      "uid": "51bf08d0-81a1-4d1f-b230-4ec21961d4e3",
+      "email": "123123",
+      "password": "123",
+      "role": "patient"
     }
   ],
   "availabilities": [
@@ -33,6 +40,23 @@
       ],
       "startTime": "01:00",
       "endTime": "20:00"
+    },
+    {
+      "id": "3e51",
+      "startDate": "2025-01-03",
+      "endDate": "2025-03-29",
+      "days": [
+        "Poniedziałek",
+        "Czwartek"
+      ],
+      "startTime": "03:00",
+      "endTime": "20:00"
+    },
+    {
+      "id": "8b0b",
+      "date": "2025-01-12",
+      "startTime": "00:00",
+      "endTime": "23:00"
     }
   ],
   "reservations": [
@@ -214,6 +238,79 @@
       "slots": [
         "18:30"
       ]
+    },
+    {
+      "id": "ec9b",
+      "date": "2025-02-03",
+      "startTime": "03:30",
+      "duration": "0.5",
+      "type": "Choroba przewlekła",
+      "patientName": "Joanna Kowalska",
+      "gender": "female",
+      "age": 40,
+      "notes": "",
+      "slots": [
+        "03:30"
+      ]
+    },
+    {
+      "id": "26ae",
+      "date": "2025-01-13",
+      "startTime": "05:00",
+      "duration": "1",
+      "type": "Wizyta kontrolna",
+      "patientName": "Zofia Nowak",
+      "gender": "female",
+      "age": 60,
+      "notes": "",
+      "slots": [
+        "05:00",
+        "05:30"
+      ]
+    },
+    {
+      "id": "7879",
+      "date": "2025-01-09",
+      "startTime": "12:30",
+      "duration": "1",
+      "type": "Choroba przewlekła",
+      "patientName": "Irena ",
+      "gender": "female",
+      "age": 67,
+      "notes": "",
+      "slots": [
+        "12:30",
+        "13:00"
+      ]
+    },
+    {
+      "id": "6a5d",
+      "date": "2025-01-09",
+      "startTime": "02:00",
+      "duration": "0.5",
+      "type": "Choroba przewlekła",
+      "patientName": "dddd",
+      "gender": "male",
+      "age": 66,
+      "notes": "",
+      "slots": [
+        "02:00"
+      ]
+    },
+    {
+      "id": "08d3",
+      "date": "2025-01-09",
+      "startTime": "03:00",
+      "duration": "1",
+      "type": "Choroba przewlekła",
+      "patientName": "333",
+      "gender": "male",
+      "age": 44,
+      "notes": "",
+      "slots": [
+        "03:00",
+        "03:30"
+      ]
     }
   ],
   "absences": [
@@ -232,6 +329,10 @@
     {
       "id": "8b2a",
       "date": "2025-01-01"
+    },
+    {
+      "id": "1ed2",
+      "date": "2025-01-12"
     }
   ]
 }

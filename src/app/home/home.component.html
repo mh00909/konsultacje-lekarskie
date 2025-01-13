@@ -1,0 +1,22 @@
+<div class="home-container">
+  <h1>{{ title }}</h1>
+  <p class="welcome-message">{{ getWelcomeMessage() }}</p>
+
+  <div *ngIf="userRole === 'doctor'" class="user-actions">
+    <h2>Opcje dla lekarza:</h2>
+    <a routerLink="/calendar" class="action-button">Przejdź do kalendarza</a>
+    <a routerLink="/doctor-settings" class="action-button">Ustawienia</a>
+  </div>
+
+  <div *ngIf="userRole === 'patient'" class="user-actions">
+    <h2>Opcje dla pacjenta:</h2>
+    <a routerLink="/doctors" class="action-button">Zobacz listę lekarzy</a>
+    <a routerLink="/my-reservations" class="action-button">Moje wizyty</a>
+  </div>
+
+  <div *ngIf="!userRole" class="guest-actions">
+    <h2>Witamy w systemie</h2>
+    <p>Zaloguj się, aby uzyskać dostęp do funkcji systemu.</p>
+    <a routerLink="/login" class="action-button">Zaloguj się</a>
+  </div>
+</div>

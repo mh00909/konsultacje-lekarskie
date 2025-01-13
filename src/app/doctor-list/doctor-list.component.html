@@ -1,0 +1,47 @@
+<div class="doctor-list">
+  <h2>Lista lekarzy</h2>
+
+  <!-- Przycisk do wyświetlania formularza dodawania lekarza (widoczny tylko dla admina) -->
+  <button *ngIf="userRole === 'admin'" (click)="toggleAddDoctorForm()" class="add-doctor-button">
+    {{ showAddDoctorForm ? 'Anuluj' : 'Dodaj lekarza' }}
+  </button>
+
+  <!-- Formularz dodawania lekarza (widoczny tylko po kliknięciu przycisku) -->
+  <form *ngIf="showAddDoctorForm" [formGroup]="addDoctorForm" (ngSubmit)="onSubmitAddDoctor()" class="add-doctor-form">
+    <h3>Dodaj lekarza</h3>
+    <label>
+      Imię i nazwisko:
+      <input formControlName="name" type="text" />
+    </label>
+    <label>
+      Specjalizacja:
+      <input formControlName="specialization" type="text" />
+    </label>
+    <label>
+      Email:
+      <input formControlName="email" type="email" />
+    </label>
+    <label>
+      Telefon:
+      <input formControlName="phone" type="text" />
+    </label>
+    <button type="submit">Dodaj</button>
+  </form>
+
+  <!-- Kontenery dla lekarzy -->
+  <div class="doctor-cards">
+    <div class="doctor-card" *ngFor="let doctor of doctors">
+      <h3>{{ doctor.name }}</h3>
+      <p><strong>Specjalizacja:</strong> {{ doctor.specialization }}</p>
+      <p><strong>Email:</strong> {{ doctor.email }}</p>
+      <p><strong>Telefon:</strong> {{ doctor.phone }}</p>
+      <a *ngIf="isLoggedIn" [routerLink]="['/calendar', doctor.id]" class="view-schedule-button">
+        Zobacz harmonogram
+      </a>
+      <!-- Akcje widoczne tylko dla admina -->
+      <button *ngIf="userRole === 'admin'" (click)="deleteDoctor(doctor.id)" class="delete-doctor-button">
+        Usuń
+      </button>
+    </div>
+  </div>
+</div>

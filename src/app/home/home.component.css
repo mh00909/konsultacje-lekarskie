@@ -1,0 +1,49 @@
+.home-container {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+  }
+  
+  .home-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #3d4a63;
+  }
+  
+  .welcome-message {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: #555;
+  }
+  
+  .user-actions, .guest-actions {
+    margin-top: 20px;
+  }
+  
+  .user-actions h2, .guest-actions h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #3d4a63;
+  }
+  
+  .action-button {
+    display: inline-block;
+    margin: 10px 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #7896CC;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .action-button:hover {
+    background-color: #3d4a63;
+  }
+  

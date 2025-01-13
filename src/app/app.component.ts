@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './auth.service';
 import { DataSourceManagerService } from './data-source-manager.service';
 
@@ -9,13 +9,12 @@ import { DataSourceManagerService } from './data-source-manager.service';
   standalone: false,
   styleUrl: './app.component.css'
 })
-
-
-export class AppComponent {
+export class AppComponent implements OnInit {
   isLoggedIn = false;
   userEmail: string | null = null;
   userRole: string | null = null;
-  currentSource = 'json'; 
+  currentSource = 'json';
+  showDataSourceSelector = false;
 
   constructor(
     private dataSourceManager: DataSourceManagerService,
@@ -35,11 +34,20 @@ export class AppComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const url = event.urlAfterRedirects;
+        this.showDataSourceSelector = url === '/login' || url === '/register';
+      }
+    });
+  }
+
   onSourceChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     this.dataSourceManager.setDataSource(value as 'json' | 'firebase');
   }
-  
+
   onLogout(): void {
     this.authService.logout().then(() => {
       localStorage.removeItem('user');
