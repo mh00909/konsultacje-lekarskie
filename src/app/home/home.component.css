@@ -14,6 +14,9 @@
     margin-bottom: 20px;
     color: #3d4a63;
   }
+  .home-container h4 {
+    color: #3d4a63;
+  }
   
   .welcome-message {
     font-size: 1.2em;

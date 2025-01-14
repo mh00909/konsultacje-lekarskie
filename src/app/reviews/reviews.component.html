@@ -1,0 +1,17 @@
+<div class="reviews-container">
+    <h2>Opinie o lekarzu</h2>
+  
+    <h3 *ngIf="doctorName">{{ doctorName }}</h3>
+    <p *ngIf="reviews.length === 0">Brak opinii dla tego lekarza.</p>
+  
+    <ul *ngIf="reviews.length > 0">
+      <li *ngFor="let review of reviews">
+        <div class="review-details">
+          <p><strong>Ocena:</strong> {{ review.rating }}/5</p>
+          <p><strong>Komentarz:</strong> {{ review.comment }}</p>
+          <p><strong>Data:</strong> {{ review.date | date:'yyyy-MM-dd' }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  

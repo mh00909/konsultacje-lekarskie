@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataSourceManagerService } from '../data-source-manager.service';
 
 @Component({
@@ -16,10 +16,12 @@ export class ReservationComponent implements OnInit {
 
   isProcessing = false; // Flaga przetwarzania
   reservationSuccess = false; // Flaga sukcesu rezerwacji
+  userId: string | null = null; // ID użytkownika
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private dataSourceManager: DataSourceManagerService
   ) {
     this.reservationForm = this.fb.group({
@@ -28,7 +30,9 @@ export class ReservationComponent implements OnInit {
       duration: ['', [Validators.required, Validators.min(0.5)]],
       type: ['', Validators.required],
       patientName: ['', Validators.required],
+      doctorName: ['', Validators.required],
       doctorId: ['', Validators.required],
+      patientId: ['', Validators.required],
       gender: ['', Validators.required],
       age: ['', [Validators.required, Validators.min(0)]],
       notes: ['']
@@ -36,6 +40,20 @@ export class ReservationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Pobierz `userId` z `localStorage`
+    this.userId = localStorage.getItem('userId');
+
+    if (!this.userId) {
+      // Jeśli brak `userId`, przekieruj na stronę logowania
+      alert('Nie jesteś zalogowany. Zaloguj się, aby kontynuować.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Ustaw `userId` w formularzu
+    this.reservationForm.patchValue({ patientId: this.userId });
+
+    // Pobierz parametry z trasy
     this.route.queryParams.subscribe(params => {
       if (params['date']) {
         this.reservationForm.patchValue({
@@ -48,23 +66,26 @@ export class ReservationComponent implements OnInit {
       }
     });
   }
-  
 
   onSubmitReservation(): void {
     console.log('Rozpoczęcie procesu rezerwacji', { isProcessing: this.isProcessing, reservationSuccess: this.reservationSuccess });
 
-    // Zablokowanie wielokrotnego przetwarzania
     if (this.isProcessing || this.reservationSuccess) {
       console.log('Proces rezerwacji już trwa lub zakończony sukcesem. Przerywam.');
       return;
     }
 
     this.isProcessing = true;
-    const reservation = this.reservationForm.value;
+
+    const reservation = {
+      ...this.reservationForm.value,
+      userId: this.userId // Dodaj `userId` do rezerwacji
+    };
+
     const slots = this.generateSlots(reservation.date, reservation.startTime, reservation.duration);
 
-    // Pobranie dostępności i rezerwacji
     const dataSource = this.dataSourceManager.getDataSource();
+
     dataSource.getData('availabilities').subscribe({
       next: availabilities => {
         const isAvailable = this.validateAvailability(slots, reservation.date, availabilities);
@@ -86,19 +107,38 @@ export class ReservationComponent implements OnInit {
 
   private checkExistingReservations(slots: string[], reservation: any): void {
     const dataSource = this.dataSourceManager.getDataSource();
+  
     dataSource.getData('reservations').subscribe({
       next: existingReservations => {
+        // Filtrowanie rezerwacji dla danego dnia i lekarza
         const occupiedSlots = existingReservations
-          .filter(res => res.date === reservation.date)
+          .filter(res => res.date === reservation.date && res.doctorId === reservation.doctorId)
           .flatMap(res => res.slots || []);
-
-        const conflictingSlots = slots.filter(slot => occupiedSlots.includes(slot));
+  
+        console.log('Istniejące rezerwacje dla lekarza:', reservation.doctorId, occupiedSlots);
+  
+        // Sprawdzenie kolizji slotów
+        const isOverlapping = (slot: string, reservationSlots: string[], reservationDate: string, reservationDuration: number): boolean => {
+          return reservationSlots.some(reservedSlot => {
+            const reservedTime = new Date(`${reservationDate}T${reservedSlot}`);
+            const slotTime = new Date(`${reservationDate}T${slot}`);
+            const reservedEndTime = new Date(reservedTime.getTime() + reservationDuration * 60 * 60 * 1000);
+            return slotTime >= reservedTime && slotTime < reservedEndTime;
+          });
+        };
+  
+        const conflictingSlots = slots.filter(slot =>
+          isOverlapping(slot, occupiedSlots, reservation.date, reservation.duration)
+        );
+  
+        console.log('Kolidujące sloty:', conflictingSlots);
+  
         if (conflictingSlots.length > 0) {
-          alert(`Niektóre sloty są już zajęte: ${conflictingSlots.join(', ')}. Wybierz inny termin.`);
+          alert(`Niektóre sloty są już zajęte przez lekarza: ${conflictingSlots.join(', ')}. Wybierz inny termin.`);
           this.resetProcessingFlags();
           return;
         }
-
+  
         this.saveReservation(slots, reservation);
       },
       error: err => {
@@ -107,7 +147,8 @@ export class ReservationComponent implements OnInit {
       }
     });
   }
-
+  
+  
   private saveReservation(slots: string[], reservation: any): void {
     const dataSource = this.dataSourceManager.getDataSource();
     const fullReservation = { ...reservation, slots };
@@ -138,36 +179,52 @@ export class ReservationComponent implements OnInit {
       Sunday: 'Niedziela',
     };
 
-    return slots.every(slot => {
-      return availabilities.some(availability => {
-        if (!availability.days || !availability.startTime || !availability.endTime) {
-          console.warn('Niepełne dane dostępności:', availability);
-          return false;
-        }
+    console.log('Sloty do sprawdzenia:', slots);
+console.log('Dostępności lekarza:', availabilities);
 
-        const reservationDate = new Date(date);
-        const reservationDayEnglish = reservationDate.toLocaleDateString('en-US', { weekday: 'long' });
-        const reservationDayPolish = dayMapping[reservationDayEnglish];
+return slots.every(slot => {
+  const isAvailable = availabilities.some(availability => {
+    if (!availability.days || !availability.startTime || !availability.endTime) {
+      console.warn('Niepełne dane dostępności:', availability);
+      return false;
+    }
 
-        const inDateRange =
-          reservationDate >= new Date(availability.startDate) &&
-          reservationDate <= new Date(availability.endDate);
+    const reservationDate = new Date(date);
+    const reservationDayEnglish = reservationDate.toLocaleDateString('en-US', { weekday: 'long' });
+    const reservationDayPolish = dayMapping[reservationDayEnglish];
 
-        const isDayAvailable = availability.days.includes(reservationDayPolish);
+    const inDateRange =
+      reservationDate >= new Date(availability.startDate) &&
+      reservationDate <= new Date(availability.endDate);
 
-        const [slotHours, slotMinutes] = slot.split(':').map(Number);
-        const [startHours, startMinutes] = availability.startTime.split(':').map(Number);
-        const [endHours, endMinutes] = availability.endTime.split(':').map(Number);
+    const isDayAvailable = availability.days.includes(reservationDayPolish);
 
-        const slotTimeInMinutes = slotHours * 60 + slotMinutes;
-        const startTimeInMinutes = startHours * 60 + startMinutes;
-        const endTimeInMinutes = endHours * 60 + endMinutes;
+    const [slotHours, slotMinutes] = slot.split(':').map(Number);
+    const [startHours, startMinutes] = availability.startTime.split(':').map(Number);
+    const [endHours, endMinutes] = availability.endTime.split(':').map(Number);
 
-        const isTimeAvailable = slotTimeInMinutes >= startTimeInMinutes && slotTimeInMinutes < endTimeInMinutes;
+    const slotTimeInMinutes = slotHours * 60 + slotMinutes;
+    const startTimeInMinutes = startHours * 60 + startMinutes;
+    const endTimeInMinutes = endHours * 60 + endMinutes;
 
-        return inDateRange && isDayAvailable && isTimeAvailable;
-      });
+    const isTimeAvailable = slotTimeInMinutes >= startTimeInMinutes && slotTimeInMinutes < endTimeInMinutes;
+
+    console.log('Walidacja slotu:', slot, {
+      inDateRange,
+      isDayAvailable,
+      isTimeAvailable
     });
+
+    return inDateRange && isDayAvailable && isTimeAvailable;
+  });
+
+  if (!isAvailable) {
+    console.warn('Slot niedostępny:', slot);
+  }
+
+  return isAvailable;
+});
+
   }
 
   private generateSlots(date: string, startTime: string, duration: number): string[] {

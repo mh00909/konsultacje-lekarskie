@@ -1,25 +1,61 @@
 <div class="cart-container">
-    <h2>Koszyk rezerwacji</h2>
-  
-    <div *ngIf="reservations.length === 0">
-      <p>Brak zarezerwowanych wizyt.</p>
-    </div>
-  
-    <ul *ngIf="reservations.length > 0">
-      <li *ngFor="let reservation of reservations">
-        <div class="reservation-details">
-          <p><strong>Typ:</strong> {{ reservation.type }}</p>
-          <p><strong>Data:</strong> {{ reservation.date }}</p>
-          <p><strong>Godzina:</strong> {{ reservation.startTime }}</p>
-          <p><strong>Pacjent:</strong> {{ reservation.patientName }}</p>
-          <button (click)="cancelReservation(reservation)">Anuluj</button>
-        </div>
-      </li>
-    </ul>
-  
-    <div *ngIf="reservations.length > 0" class="payment-section">
-      <button (click)="simulatePayment()">Zapłać</button>
-      <p *ngIf="paymentStatus">{{ paymentStatus }}</p>
-    </div>
+  <h2>Koszyk rezerwacji</h2>
+
+  <div *ngIf="futureReservations.length === 0 && pastReservations.length === 0">
+    <p>Brak zarezerwowanych wizyt.</p>
   </div>
-  
+
+  <h3>Przyszłe wizyty</h3>
+  <ul *ngIf="futureReservations.length > 0">
+    <li *ngFor="let reservation of futureReservations">
+      <div class="reservation-details">
+        <p><strong>Typ:</strong> {{ reservation.type }}</p>
+        <p><strong>Data:</strong> {{ reservation.date }}</p>
+        <p><strong>Godzina:</strong> {{ reservation.startTime }}</p>
+        <p><strong>Lekarz:</strong> {{ reservation.doctorName }}</p>
+        <button (click)="cancelReservation(reservation)">Anuluj</button>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Przeszłe wizyty</h3>
+  <ul *ngIf="pastReservations.length > 0">
+    <li *ngFor="let reservation of pastReservations">
+      <div class="reservation-details">
+        <p><strong>Typ:</strong> {{ reservation.type }}</p>
+        <p><strong>Data:</strong> {{ reservation.date }}</p>
+        <p><strong>Godzina:</strong> {{ reservation.startTime }}</p>
+        <p><strong>Lekarz:</strong> {{ reservation.doctorName }}</p>
+      </div>
+      
+      <!-- Formularz oceny -->
+      
+
+
+      <div *ngIf="!reservation.isReviewed" class="review-form">
+        <h4>Dodaj opinię</h4>
+        <label>
+          Ocena:
+          <select #rating>
+            <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">{{ star }}</option>
+          </select>
+        </label>
+        <label>
+          Komentarz:
+          <textarea #comment></textarea>
+        </label>
+        <!-- Wymuszamy konwersję rating.value na liczbę -->
+        <button (click)="addReview(reservation, +rating.value, comment.value)">Dodaj opinię</button>
+      </div>
+
+      
+      
+      <p *ngIf="reservation.isReviewed">Dziękujemy za Twoją opinię!</p>
+    </li>
+  </ul>
+
+  <div *ngIf="futureReservations.length > 0" class="payment-section">
+    <button (click)="simulatePayment()">Zapłać</button>
+    <p *ngIf="paymentStatus">{{ paymentStatus }}</p>
+  </div>
+</div>

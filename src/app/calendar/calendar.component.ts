@@ -8,6 +8,7 @@ const CONSULTATION_COLORS: { [key: string]: string } = {
   'Wizyta kontrolna': '#87cefa',
   'Choroba przewlekła': '#ff7f50',
   'Recepta': '#90ee90',
+  'Przeszła' : '#d3d3d3'
 };
 
 @Component({
@@ -177,17 +178,25 @@ export class CalendarComponent implements OnInit {
 
   isSlotAvailable(day: string, time: string): boolean {
     const date = this.getDateForDay(this.days.indexOf(day));
-
-    return this.availabilities.some(
-      (availability) =>
+  
+    return this.availabilities.some(availability => {
+      const isCyclicAvailability =
         Array.isArray(availability.days) &&
         availability.days.includes(day) &&
-      availability.startTime <= time &&
-      availability.endTime >= time &&
-      new Date(availability.startDate) <= new Date(date) &&
-      new Date(availability.endDate) >= new Date(date)
-    );
+        availability.startTime <= time &&
+        availability.endTime >= time &&
+        new Date(availability.startDate) <= new Date(date) &&
+        new Date(availability.endDate) >= new Date(date);
+  
+      const isOneTimeAvailability =
+        availability.date === date &&
+        availability.startTime <= time &&
+        availability.endTime >= time;
+  
+      return isCyclicAvailability || isOneTimeAvailability;
+    });
   }
+  
 
   isSlotAbsent(day: string): boolean {
     const date = this.getDateForDay(this.days.indexOf(day));
@@ -251,6 +260,9 @@ export class CalendarComponent implements OnInit {
   
     if (reservation && this.isSlotAbsent(day)) {
       return '#ff0000'; // Kolor czerwony dla odwołanych
+    }
+    if (reservation && this.isPastReservation(date, time)) {
+      return CONSULTATION_COLORS['Przeszła'];
     }
   
     if (reservation && reservation.type) {

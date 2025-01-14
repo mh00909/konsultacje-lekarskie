@@ -12,6 +12,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { DoctorListComponent } from './doctor-list/doctor-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { ReviewsComponent } from './reviews/reviews.component';
 
 const routes: Routes = [
   { path: 'calendar/:doctorId', component: CalendarComponent, canActivate: [AuthGuard], data: { roles: ['patient', 'doctor', 'admin'] } },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'availability', component: AvailabilityComponent, canActivate: [AuthGuard], data: { roles: ['doctor'] } },
   { path: 'absence', component: AbsenceComponent, canActivate: [AuthGuard], data: { roles: ['doctor'] } },
   { path: 'reservation', component: ReservationComponent, canActivate: [AuthGuard], data: { roles: ['patient'] }},
+  { path: 'reviews/:doctorId', component: ReviewsComponent, canActivate: [AuthGuard], data: { roles: ['patient', 'doctor', 'admin'] }},
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['patient'] } },
   { path: 'register', component: RegisterComponent},
   { path: 'login', component: LoginComponent },

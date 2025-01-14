@@ -20,11 +20,13 @@ export class LoginComponent {
         alert(`Zalogowano jako ${user.role}`);
 
         if (user.role === 'doctor') {
-          localStorage.setItem('doctorId', user.id); 
+          localStorage.setItem('doctorId', user.doctorId); 
         }
+        localStorage.setItem('userId', user.id); 
         localStorage.setItem('userRole', user.role); 
         localStorage.setItem('userEmail', user.email);
-        
+        localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role, userId: user.id }));
+
         location.reload()
         location.replace('/home')
       },

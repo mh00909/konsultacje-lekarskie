@@ -30,6 +30,7 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { DoctorListComponent } from './doctor-list/doctor-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { ReviewsComponent } from './reviews/reviews.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { UsersListComponent } from './users-list/users-list.component';
     UnauthorizedComponent,
     DoctorListComponent,
     HomeComponent,
-    UsersListComponent
+    UsersListComponent,
+    ReviewsComponent
   ],
   imports: [
     BrowserModule,

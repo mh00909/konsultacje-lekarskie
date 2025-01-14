@@ -3,20 +3,26 @@
   <p class="welcome-message">{{ getWelcomeMessage() }}</p>
 
   <div *ngIf="userRole === 'doctor'" class="user-actions">
-    <h2>Opcje dla lekarza:</h2>
+    <h4>Zalogowano jako lekarz.</h4>
     <a routerLink="/calendar" class="action-button">Przejdź do kalendarza</a>
     <a routerLink="/doctor-settings" class="action-button">Ustawienia</a>
   </div>
 
   <div *ngIf="userRole === 'patient'" class="user-actions">
-    <h2>Opcje dla pacjenta:</h2>
+   
     <a routerLink="/doctors" class="action-button">Zobacz listę lekarzy</a>
-    <a routerLink="/my-reservations" class="action-button">Moje wizyty</a>
+    <a routerLink="/cart" class="action-button">Moje wizyty</a>
+  </div>
+
+  <div *ngIf="userRole === 'admin'" class="admin-actions">
+    <h4>Zalogowano jako admin</h4>
+    <a routerLink="/settings" class="action-button">Ustawienia</a>
+    
   </div>
 
   <div *ngIf="!userRole" class="guest-actions">
     <h2>Witamy w systemie</h2>
-    <p>Zaloguj się, aby uzyskać dostęp do funkcji systemu.</p>
+    <h4>Zaloguj się lub zarejestruj, aby korzystać z systemu.</h4>
     <a routerLink="/login" class="action-button">Zaloguj się</a>
   </div>
 </div>

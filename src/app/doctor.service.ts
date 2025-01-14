@@ -21,9 +21,20 @@ export class DoctorService {
   getDoctors(): Observable<Doctor[]> {
     const dataSource = this.dataSourceManager.getDataSource();
     return dataSource.getData('users').pipe(
-      map((users: any[]) => users.filter(user => user.role === 'doctor'))
+      map((users: any[]) => {
+        return users
+          .filter(user => user.role === 'doctor')
+          .map(user => ({
+            id: user.doctorId, // Użyj doctorId zamiast userId
+            name: user.name,
+            specialization: user.specialization,
+            email: user.email,
+            phone: user.phone,
+          }));
+      })
     );
   }
+  
 
   addDoctor(doctor: Doctor): Observable<any> {
     const dataSource = this.dataSourceManager.getDataSource();

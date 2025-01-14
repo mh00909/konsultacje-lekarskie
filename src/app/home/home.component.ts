@@ -20,6 +20,8 @@ export class HomeComponent implements OnInit {
         return 'Zarządzaj swoim harmonogramem i dostępnościami.';
       case 'patient':
         return 'Zarezerwuj wizytę u swojego lekarza.';
+      case 'admin':
+        return 'Zarządzaj systemem rezerwacji wizyt.';
       default:
         return 'Zaloguj się, aby uzyskać dostęp do systemu.';
     }
