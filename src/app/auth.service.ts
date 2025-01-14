@@ -5,7 +5,7 @@ import { map, Observable, of, switchMap } from 'rxjs';
 import { DataSource } from './data-source.interface';
 import { DataSourceManagerService } from './data-source-manager.service';
 import { v4 as uuidv4 } from 'uuid';
-
+import * as bcrypt from 'bcryptjs';
 
 export interface UserData {
   email: string;
@@ -29,9 +29,21 @@ export class AuthService {
   }
 
   register(email: string, password: string, role: string): Observable<any> {
-    const uid = uuidv4(); 
-    return this.dataSource.addData('users', { uid, email, password, role });
+    return this.dataSource.getData('users').pipe(
+      map(users => {
+        const existingUser = users.find((u: any) => u.email === email);
+        if (existingUser) {
+          throw new Error('Użytkownik o podanym adresie e-mail już istnieje');
+        }
+      }),
+      switchMap(() => {
+        const uid = uuidv4(); // Generuj unikalne ID
+        const hashedPassword = bcrypt.hashSync(password, 10); // Hashowanie hasła
+        return this.dataSource.addData('users', { uid, email, password: hashedPassword, role });
+      })
+    );
   }
+  
 
 
   logout(): Promise<void> {
@@ -46,14 +58,16 @@ export class AuthService {
     return this.dataSource.getData('users').pipe(
       map(users => {
         console.log('Dostępni użytkownicy:', users);
-        const user = users.find((u: any) => u.email === email && u.password === password);
-        if (!user) {
+        const user = users.find((u: any) => u.email === email);
+        if (!user || !bcrypt.compareSync(password, user.password)) {
           throw new Error('Nieprawidłowy email lub hasło');
         }
         return user;
       })
     );
   }
+  
+  
   
   getUserRole(uid: string): Observable<any> {
     return this.dataSource.getData('users').pipe(

@@ -28,12 +28,15 @@ export class FirebaseDataService implements DataSource {
     );
   }
 
-  updateData(collectionName: string, id: string, data: any): Observable<void> {
+  update(collectionName: string, id: string, data: any): Observable<void> {
     console.log(`Aktualizacja danych w kolekcji "${collectionName}" o ID: ${id}`, data);
     return from(
       this.firestore.collection(collectionName).doc(id).update(data)
     );
   }
+
+
+  
   
 
 }

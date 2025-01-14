@@ -16,11 +16,12 @@ export class RegisterComponent {
 
   onRegister(): void {
     this.authService.register(this.email, this.password, this.role).subscribe({
-      next: () => alert('Rejestracja zakończona sukcesem!'),
+      next: () => {
+        alert('Rejestracja zakończona sukcesem!');
+        location.replace('/login');
+      },
       error: (err) => alert(`Błąd podczas rejestracji: ${err.message}`)
     });
-
-    location.reload()
-    location.replace('/login')
   }
+  
 }

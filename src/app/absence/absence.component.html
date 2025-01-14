@@ -1,21 +1,50 @@
 <div class="absence-container">
-    <h2>Dodaj nieobecność</h2>
-  
-    <form [formGroup]="absenceForm" (ngSubmit)="onSubmitAbsence()">
-      <label>
-        Wybierz datę:
-        <input type="date" formControlName="date" />
-      </label>
-  
-      <button type="submit">Dodaj nieobecność</button>
-    </form>
-  
-    <h3 style="margin-top:10px">Lista nieobecności</h3>
-    <ul>
-      <li *ngFor="let absence of absences">
-        {{ absence.date }}
-        <button (click)="removeAbsence(absence)">Usuń</button>
-      </li>
-    </ul>
-  </div>
-  
+  <h2>Dodaj jednorazową nieobecność</h2>
+
+  <form [formGroup]="absenceForm" (ngSubmit)="onSubmitAbsence()">
+    <label>
+      Wybierz datę:
+      <input type="date" formControlName="date" />
+    </label>
+
+    <button type="submit">Dodaj nieobecność</button>
+  </form>
+
+  <h2 style="margin-top:20px">Dodaj cykliczną nieobecność</h2>
+
+  <form [formGroup]="cyclicAbsenceForm" (ngSubmit)="onSubmitCyclicAbsence()">
+    <label>
+      Data początkowa:
+      <input type="date" formControlName="startDate" />
+    </label>
+
+    <label>
+      Data końcowa:
+      <input type="date" formControlName="endDate" />
+    </label>
+
+    <label>
+      Wybierz dni tygodnia:
+      <select formControlName="days" multiple>
+        <option *ngFor="let day of ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela']" [value]="day">
+          {{ day }}
+        </option>
+      </select>
+    </label>
+
+    <button type="submit">Dodaj cykliczną nieobecność</button>
+  </form>
+
+  <h3 style="margin-top:20px">Lista nieobecności</h3>
+  <ul>
+    <li *ngFor="let absence of absences">
+      <span *ngIf="absence.startDate && absence.endDate">
+        Cykliczna: od {{ absence.startDate }} do {{ absence.endDate }} w dniach: {{ absence.days?.join(', ') }}
+      </span>
+      <span *ngIf="!absence.startDate">
+        Jednorazowa: {{ absence.date }}
+      </span>
+      <button (click)="removeAbsence(absence.id)">Usuń</button>
+    </li>
+  </ul>
+</div>

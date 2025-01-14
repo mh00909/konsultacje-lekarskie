@@ -16,6 +16,13 @@
       "email": "123123",
       "password": "123",
       "role": "patient"
+    },
+    {
+      "id": "2524",
+      "uid": "83b9258e-28a0-4e9c-baec-8b41c630ea44",
+      "email": "email1@wp.pl",
+      "password": "$2a$10$mQVpKnjngW/C5ZSBL8OBlebDZ0HIKghdvvRgJjUlpCGOPuyam0AOK",
+      "role": "patient"
     }
   ],
   "availabilities": [

@@ -23,4 +23,8 @@ export class LocalJsonService implements DataSource {
   removeData(collectionName: string, id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${collectionName}/${id}`);
   }
+  update(collectionName: string, id: string, data: any): Observable<void> {
+    console.log(`Aktualizacja danych w LocalJsonService dla kolekcji "${collectionName}" o ID: ${id}`, data);
+    return this.http.put<void>(`${this.baseUrl}/${collectionName}/${id}`, data);
+  }
 }

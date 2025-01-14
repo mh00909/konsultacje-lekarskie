@@ -35,6 +35,7 @@ export class CalendarComponent implements OnInit {
   availabilities: any[] = [];
   currentWeekStart: Date = this.getStartOfWeek(new Date());
   doctorId: string | null = null;
+  userId: string | null = null;
 
   selectedDetails: any = null;
   detailsVisible = false; 
@@ -44,6 +45,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.doctorId = this.activatedRoute.snapshot.paramMap.get('doctorId');
+    this.userId = localStorage.getItem('userId'); 
     this.dataSourceManager.onDataSourceChange().subscribe(() => {
       this.fetchData();
     });
@@ -141,16 +143,18 @@ export class CalendarComponent implements OnInit {
       );
   
       if (reservation) {
-        const confirmCancel = confirm(
-          `Czy na pewno chcesz anulować wizytę?\n\n` +
-          `Typ: ${reservation.type}\n` +
-          `Data: ${reservation.date}\n` +
-          `Godzina: ${reservation.startTime}\n` +
-          `Pacjent: ${reservation.patientName}`
-        );
-  
-        if (confirmCancel) {
-          this.cancelReservation(reservation);
+        if (reservation.patientId === this.userId) {
+          const confirmCancel = confirm(
+            `Czy na pewno chcesz anulować wizytę?\n\n` +
+            `Typ: ${reservation.type}\n` +
+            `Data: ${reservation.date}\n` +
+            `Godzina: ${reservation.startTime}\n` +
+            `Pacjent: ${reservation.patientName}`
+          );
+    
+          if (confirmCancel) {
+            this.cancelReservation(reservation);
+          }
         }
       }
     } else if (status === 'absent') {

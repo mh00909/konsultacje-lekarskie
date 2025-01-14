@@ -36,7 +36,7 @@ export class CartComponent implements OnInit {
         console.log('Wszystkie lekarze:', doctors);
   
         const now = new Date();
-        const userReservations = reservations.filter((res: any) => res.patientId === this.userId);
+        const userReservations = reservations.filter((res: any) => res.patientId === this.userId && res.status !== 'odwołane' );
   
         // Uzupełnij rezerwacje o nazwę lekarza
         userReservations.forEach(reservation => {

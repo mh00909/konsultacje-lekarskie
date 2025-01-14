@@ -51,4 +51,23 @@ export class DataSourceManagerService {
     const sourceToSet = savedSource || environment.dataSource; // Jeśli nie ma w LocalStorage, użyj domyślnego
     this.setDataSource(sourceToSet);
   }
+
+
+  update(collection: string, id: string, updatedData: any): void {
+    if (!this.currentDataSource) {
+      console.error('Źródło danych nie zostało zainicjalizowane.');
+      throw new Error('Źródło danych nie zostało zainicjalizowane.');
+    }
+
+    console.log(`Aktualizowanie danych w kolekcji "${collection}" z ID: ${id}`, updatedData);
+
+    this.currentDataSource.update(collection, id, updatedData).subscribe({
+      next: () => {
+        console.log(`Dane w kolekcji "${collection}" z ID: ${id} zostały zaktualizowane.`);
+      },
+      error: (err) => {
+        console.error(`Błąd podczas aktualizacji danych w kolekcji "${collection}" z ID: ${id}:`, err);
+      }
+    });
+  }
 }
