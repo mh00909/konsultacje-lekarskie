@@ -18,7 +18,6 @@ export interface Doctor {
 export class DoctorService {
   constructor(private dataSourceManager: DataSourceManagerService) {}
 
-  // Pobieranie listy lekarzy (użytkowników z rolą 'doctor')
   getDoctors(): Observable<Doctor[]> {
     const dataSource = this.dataSourceManager.getDataSource();
     return dataSource.getData('users').pipe(
@@ -26,34 +25,31 @@ export class DoctorService {
         return users
           .filter(user => user.role === 'doctor')
           .map(user => ({
-            id: user.doctorId, // Użyj doctorId zamiast userId
+            id: user.doctorId, 
             name: user.name,
             specialization: user.specialization,
             email: user.email,
-            phone: user.phone,
+            phone:  user.phone,
           }));
       })
     );
   }
 
-  addDoctor(doctor: Doctor): Observable<any> {
+  addDoctor(doctor: Doctor & { password: string }): Observable<any> {
     const dataSource = this.dataSourceManager.getDataSource();
-
-    
-    const hashedPassword = bcrypt.hashSync('password', 10);
-
-    // Tworzenie obiektu użytkownika dla logowania
+  
+    const hashedPassword = bcrypt.hashSync(doctor.password, 10);
+  
     const user = {
       email: doctor.email,
-      password: hashedPassword, // Zhashowane hasło
+      password: hashedPassword, 
       role: 'doctor',
       doctorId: doctor.id, // Połączenie z lekarzem
       specialization: doctor.specialization,
       phone: doctor.phone,
       name: doctor.name,
     };
-
-    // Dodaj lekarza i użytkownika
+  
     return new Observable((observer) => {
       dataSource.addData('doctors', doctor).subscribe({
         next: (doctorRef) => {
@@ -70,6 +66,7 @@ export class DoctorService {
       });
     });
   }
+  
 
   removeDoctor(doctorId: string): Observable<void> {
     const dataSource = this.dataSourceManager.getDataSource();

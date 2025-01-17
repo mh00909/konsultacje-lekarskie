@@ -48,7 +48,7 @@ export class DataSourceManagerService {
   }
   initializeDataSource(): void {
     const savedSource = localStorage.getItem('dataSource') as 'json' | 'firebase';
-    const sourceToSet = savedSource || environment.dataSource; // Jeśli nie ma w LocalStorage, użyj domyślnego
+    const sourceToSet = savedSource || environment.dataSource;
     this.setDataSource(sourceToSet);
   }
 

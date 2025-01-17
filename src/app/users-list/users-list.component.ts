@@ -45,4 +45,33 @@ export class UsersListComponent implements OnInit {
       });
     }
   }
+
+  banUser(userId: string): void {
+    const dataSource = this.dataSourceManager.getDataSource();
+  
+    const user = this.users.find(user => user.id === userId);
+    if (!user) {
+      alert('Użytkownik nie został znaleziony.');
+      return;
+    }
+  
+    if (user.isBanned) {
+      alert('Ten użytkownik jest już zbanowany.');
+      return;
+    }
+  
+    if (confirm('Czy na pewno chcesz zbanować tego użytkownika?')) {
+      dataSource.update('users', userId, { isBanned: true }).subscribe({
+        next: () => {
+          user.isBanned = true; 
+          alert('Użytkownik został zbanowany.');
+        },
+        error: (err) => {
+          console.error('Błąd podczas banowania użytkownika:', err);
+          alert('Nie udało się zbanować użytkownika.');
+        }
+      });
+    }
+  }
+  
 }

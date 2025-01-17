@@ -24,7 +24,7 @@
     </label>
 
     <label>
-      Wybierz dni tygodnia:
+      Wybierz dni tygodnia:<br>
       <select formControlName="days" multiple>
         <option *ngFor="let day of ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela']" [value]="day">
           {{ day }}

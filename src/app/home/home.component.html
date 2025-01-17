@@ -4,8 +4,6 @@
 
   <div *ngIf="userRole === 'doctor'" class="user-actions">
     <h4>Zalogowano jako lekarz.</h4>
-    <a routerLink="/calendar" class="action-button">Przejdź do kalendarza</a>
-    <a routerLink="/doctor-settings" class="action-button">Ustawienia</a>
   </div>
 
   <div *ngIf="userRole === 'patient'" class="user-actions">

@@ -37,8 +37,8 @@ export class AuthService {
         }
       }),
       switchMap(() => {
-        const uid = uuidv4(); // Generuj unikalne ID
-        const hashedPassword = bcrypt.hashSync(password, 10); // Hashowanie hasła
+        const uid = uuidv4(); 
+        const hashedPassword = bcrypt.hashSync(password, 10);
         return this.dataSource.addData('users', { uid, email, password: hashedPassword, role });
       })
     );
@@ -47,6 +47,10 @@ export class AuthService {
 
 
   logout(): Promise<void> {
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('doctorId');
+    localStorage.removeItem('userRole');
     return this.afAuth.signOut();
   }
 
@@ -80,4 +84,29 @@ export class AuthService {
       })
     );
   }
+
+
+  changePassword(userId: string, oldPassword: string, newPassword: string): Observable<any> {
+    return this.dataSource.getData('users').pipe(
+      map(users => {
+        const user = users.find((u: any) => u.uid === userId); 
+        if (!user) {
+          throw new Error('Użytkownik nie znaleziony.');
+        }
+  
+        if (!bcrypt.compareSync(oldPassword, user.password)) {
+          throw new Error('Podano błędne aktualne hasło.');
+        }
+  
+        user.password = bcrypt.hashSync(newPassword, 10); 
+        return user;
+      }),
+      switchMap(updatedUser => 
+        this.dataSource.update('users', userId, updatedUser)
+      )
+    );
+  }
+  
+  
+
 }

@@ -31,6 +31,8 @@ import { DoctorListComponent } from './doctor-list/doctor-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { ReviewsComponent } from './reviews/reviews.component';
+import { SettingsComponent } from './settings/settings.component';
+import { DoctorPanelComponent } from './doctor-panel/doctor-panel.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { ReviewsComponent } from './reviews/reviews.component';
     DoctorListComponent,
     HomeComponent,
     UsersListComponent,
-    ReviewsComponent
+    ReviewsComponent,
+    SettingsComponent,
+    DoctorPanelComponent
   ],
   imports: [
     BrowserModule,

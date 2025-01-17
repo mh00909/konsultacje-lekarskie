@@ -10,7 +10,11 @@ h1 {
   font-size: 32px;
   color: #485979;
   margin-bottom: 20px;
-  margin-top: -20px;
+  margin-top: -32px;
+
+  text-shadow:  
+    5px 5px 8px white,
+    5px 5px 5px white;
 }
 
 .current-day {

@@ -1,0 +1,37 @@
+.doctor-panel {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .doctor-panel h1 {
+    text-align: center;
+    
+  }
+  
+  .doctor-panel ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .doctor-panel ul li {
+    margin: 10px 0;
+  }
+  
+  .doctor-panel ul li a {
+    text-decoration: none;
+    color: #485979;;
+    font-size: 18px;
+  }
+  
+  .doctor-panel ul li a:hover {
+    text-decoration: underline;
+  }
+  .doctor-panel ul li a i {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  

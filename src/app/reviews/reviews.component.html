@@ -9,7 +9,22 @@
         <div class="review-details">
           <p><strong>Ocena:</strong> {{ review.rating }}/5</p>
           <p><strong>Komentarz:</strong> {{ review.comment }}</p>
+          <p><strong>Użytkownik:</strong> {{ review.patientEmail }}</p>
           <p><strong>Data:</strong> {{ review.date | date:'yyyy-MM-dd' }}</p>
+        
+          <p *ngIf="review.doctorComment">
+            <strong>Komentarz lekarza:</strong> {{ review.doctorComment || 'Brak komentarza' }}<br>
+          </p>
+    
+        <div *ngIf="!review.doctorComment && this.loggedDoctor === this.doctorId" class="comment-section">
+          <textarea #commentInput placeholder="Dodaj komentarz"></textarea>
+          <button (click)="addComment(review.id, commentInput.value)">Skomentuj</button>
+        </div>
+        
+        <button *ngIf="userRole === 'admin'" (click)="deleteReview(review.id)" class="delete-review-button">
+          Usuń opinię
+        </button>
+
         </div>
       </li>
     </ul>

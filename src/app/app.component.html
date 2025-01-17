@@ -15,15 +15,21 @@
           </a>
         </li>
         
-      <li *ngIf="isLoggedIn && userRole === 'doctor'">
+      <!-- <li *ngIf="isLoggedIn && userRole === 'doctor'">
         <a routerLink="/availability" routerLinkActive="active">
           <i class="fas fa-calendar-alt me-2"></i>Dostępność</a>
-      </li>
+      </li> -->
+
       <li *ngIf="isLoggedIn && userRole === 'doctor'">
+        <a routerLink="/doctor-panel" routerLinkActive="active">
+          <i class="fas fa-calendar-alt me-2"></i>Panel lekarza</a>
+      </li>
+
+      <!-- <li *ngIf="isLoggedIn && userRole === 'doctor'">
         <a routerLink="/absence" routerLinkActive="active">
           <i class="fas fa-ban me-2"></i>Absencje</a>
       </li>
-
+       -->
       
       <li *ngIf="isLoggedIn && userRole === 'patient'">
         <a routerLink="/cart" routerLinkActive="active">

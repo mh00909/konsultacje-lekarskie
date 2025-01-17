@@ -13,6 +13,8 @@ import { DoctorListComponent } from './doctor-list/doctor-list.component';
 import { HomeComponent } from './home/home.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { ReviewsComponent } from './reviews/reviews.component';
+import { SettingsComponent } from './settings/settings.component';
+import { DoctorPanelComponent } from './doctor-panel/doctor-panel.component';
 
 const routes: Routes = [
   { path: 'calendar/:doctorId', component: CalendarComponent, canActivate: [AuthGuard], data: { roles: ['patient', 'doctor', 'admin'] } },
@@ -22,14 +24,18 @@ const routes: Routes = [
   { path: 'reservation', component: ReservationComponent, canActivate: [AuthGuard], data: { roles: ['patient'] }},
   { path: 'reviews/:doctorId', component: ReviewsComponent, canActivate: [AuthGuard], data: { roles: ['patient', 'doctor', 'admin'] }},
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { roles: ['patient'] } },
+  { path: 'settings', component: SettingsComponent },
+  { path: 'reviews/:doctorId', component: ReviewsComponent },
+  { path: 'doctor-panel', component: DoctorPanelComponent, canActivate: [AuthGuard], data: { roles: ['doctor'] } },
   { path: 'register', component: RegisterComponent},
   { path: 'login', component: LoginComponent },
+  { path: 'calendar', redirectTo: '/home', pathMatch: 'full' },
   { path: 'doctors', component: DoctorListComponent },
   { path: 'home', component: HomeComponent},
-  { path: 'users', component: UsersListComponent },
+  { path: 'users', component: UsersListComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
   { path: 'unauthorized', component: UnauthorizedComponent }, 
-  { path: '', redirectTo: '/calendar', pathMatch: 'full' },
-  { path: '**', redirectTo: '/calendar' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home' },
 ];
 
 

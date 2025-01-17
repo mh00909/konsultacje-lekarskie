@@ -36,7 +36,7 @@ export class AbsenceComponent implements OnInit {
   }
 
   onSubmitAbsence(): void {
-    const doctorId = localStorage.getItem('doctorId'); // Pobierz ID lekarza
+    const doctorId = localStorage.getItem('doctorId'); 
     if (!doctorId) {
       alert('Brak doctorId. Nie można dodać absencji.');
       return;
@@ -44,7 +44,7 @@ export class AbsenceComponent implements OnInit {
   
     const absence = {
       ...this.absenceForm.value,
-      doctorId // Dodaj ID lekarza do absencji
+      doctorId 
     };
   
     const dataSource = this.dataSourceManager.getDataSource();
@@ -52,7 +52,7 @@ export class AbsenceComponent implements OnInit {
     dataSource.addData('absences', absence).subscribe({
       next: () => {
         alert('Absencja została dodana!');
-        this.updateAffectedReservations(absence.date, doctorId); // Aktualizuj wizyty
+        this.updateAffectedReservations(absence.date, doctorId);
         this.absenceForm.reset();
         this.loadAbsences();
       },
@@ -61,7 +61,7 @@ export class AbsenceComponent implements OnInit {
   }
   
   onSubmitCyclicAbsence(): void {
-    const doctorId = localStorage.getItem('doctorId'); // Pobierz ID lekarza
+    const doctorId = localStorage.getItem('doctorId'); 
     if (!doctorId) {
       alert('Brak doctorId. Nie można dodać cyklicznej absencji.');
       return;
@@ -69,7 +69,7 @@ export class AbsenceComponent implements OnInit {
   
     const cyclicAbsence = {
       ...this.cyclicAbsenceForm.value,
-      doctorId // Dodaj ID lekarza do cyklicznej absencji
+      doctorId 
     };
   
     const dataSource = this.dataSourceManager.getDataSource();
@@ -77,7 +77,7 @@ export class AbsenceComponent implements OnInit {
     dataSource.addData('absences', cyclicAbsence).subscribe({
       next: () => {
         alert('Cykliczna absencja została dodana!');
-        this.updateAffectedReservationsForCyclic(cyclicAbsence, doctorId); // Aktualizuj wizyty
+        this.updateAffectedReservationsForCyclic(cyclicAbsence, doctorId); 
         this.cyclicAbsenceForm.reset();
         this.loadAbsences();
       },
@@ -92,7 +92,6 @@ export class AbsenceComponent implements OnInit {
       next: (reservations: any[]) => {
         const { startDate, endDate, days } = cyclicAbsence;
   
-        // Przefiltruj wizyty zgodne z cykliczną absencją
         const affectedReservations = reservations.filter((res) => {
           const reservationDate = new Date(res.date);
           const absenceStartDate = new Date(startDate);
@@ -106,7 +105,6 @@ export class AbsenceComponent implements OnInit {
           return res.doctorId === doctorId && isWithinDateRange && isDayMatch;
         });
   
-        // Zaktualizuj status dla każdej wizyty
         affectedReservations.forEach((reservation) => {
           const updatedReservation = {
             ...reservation,

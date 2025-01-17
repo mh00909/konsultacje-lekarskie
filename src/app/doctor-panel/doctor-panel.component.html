@@ -1,0 +1,27 @@
+<div class="doctor-panel">
+    <h1>Panel lekarza</h1>
+    
+    <ul>
+      <li>
+        <a [routerLink]="['/calendar', doctorId]">
+          <i class="fas fa-calendar-alt"></i>  Harmonogram
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/reviews', doctorId]">
+          <i class="fas fa-star"></i> Opinie
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/availability']">
+          <i class="fas fa-clock"></i> Dodaj dostępność
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/absence']">
+          <i class="fas fa-ban"></i> Dodaj absencję
+        </a>
+      </li>
+    </ul>
+  </div>
+  

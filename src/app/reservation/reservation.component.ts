@@ -16,7 +16,7 @@ export class ReservationComponent implements OnInit {
 
   isProcessing = false; // Flaga przetwarzania
   reservationSuccess = false; // Flaga sukcesu rezerwacji
-  userId: string | null = null; // ID użytkownika
+  userId: string | null = null; 
 
   constructor(
     private fb: FormBuilder,
@@ -40,20 +40,16 @@ export class ReservationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Pobierz `userId` z `localStorage`
     this.userId = localStorage.getItem('userId');
 
     if (!this.userId) {
-      // Jeśli brak `userId`, przekieruj na stronę logowania
       alert('Nie jesteś zalogowany. Zaloguj się, aby kontynuować.');
       this.router.navigate(['/login']);
       return;
     }
 
-    // Ustaw `userId` w formularzu
     this.reservationForm.patchValue({ patientId: this.userId });
 
-    // Pobierz parametry z trasy
     this.route.queryParams.subscribe(params => {
       if (params['date']) {
         this.reservationForm.patchValue({
@@ -79,7 +75,7 @@ export class ReservationComponent implements OnInit {
 
     const reservation = {
       ...this.reservationForm.value,
-      userId: this.userId // Dodaj `userId` do rezerwacji
+      userId: this.userId 
     };
 
     const slots = this.generateSlots(reservation.date, reservation.startTime, reservation.duration);
@@ -110,14 +106,11 @@ export class ReservationComponent implements OnInit {
   
     dataSource.getData('reservations').subscribe({
       next: existingReservations => {
-        // Filtrowanie rezerwacji dla danego dnia i lekarza
         const occupiedSlots = existingReservations
           .filter(res => res.date === reservation.date && res.doctorId === reservation.doctorId)
           .flatMap(res => res.slots || []);
   
-        console.log('Istniejące rezerwacje dla lekarza:', reservation.doctorId, occupiedSlots);
   
-        // Sprawdzenie kolizji slotów
         const isOverlapping = (slot: string, reservationSlots: string[], reservationDate: string, reservationDuration: number): boolean => {
           return reservationSlots.some(reservedSlot => {
             const reservedTime = new Date(`${reservationDate}T${reservedSlot}`);
@@ -131,7 +124,6 @@ export class ReservationComponent implements OnInit {
           isOverlapping(slot, occupiedSlots, reservation.date, reservation.duration)
         );
   
-        console.log('Kolidujące sloty:', conflictingSlots);
   
         if (conflictingSlots.length > 0) {
           alert(`Niektóre sloty są już zajęte przez lekarza: ${conflictingSlots.join(', ')}. Wybierz inny termin.`);
@@ -179,8 +171,6 @@ export class ReservationComponent implements OnInit {
       Sunday: 'Niedziela',
     };
 
-    console.log('Sloty do sprawdzenia:', slots);
-console.log('Dostępności lekarza:', availabilities);
 
 return slots.every(slot => {
   const isAvailable = availabilities.some(availability => {

@@ -11,18 +11,18 @@
       "role": "doctor"
     },
     {
-      "id": "ce8e",
-      "uid": "51bf08d0-81a1-4d1f-b230-4ec21961d4e3",
-      "email": "123123",
-      "password": "123",
-      "role": "patient"
-    },
-    {
       "id": "2524",
       "uid": "83b9258e-28a0-4e9c-baec-8b41c630ea44",
       "email": "email1@wp.pl",
       "password": "$2a$10$mQVpKnjngW/C5ZSBL8OBlebDZ0HIKghdvvRgJjUlpCGOPuyam0AOK",
       "role": "patient"
+    },
+    {
+      "id": "ef97",
+      "uid": "c85d65a5-dc04-4a9c-8c3a-561929247822",
+      "email": "admin",
+      "password": "$2a$10$mxyGUdN.RjCmrWL7nCeRv.l0a71t8.pdDIXS1.LGb9ySRL2/FbRza",
+      "role": "admin"
     }
   ],
   "availabilities": [

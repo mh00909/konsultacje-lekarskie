@@ -9,9 +9,9 @@ import { Doctor, DoctorService } from '../doctor.service';
 })
 export class DoctorListComponent implements OnInit {
   doctors: Doctor[] = [];
-  userRole: string | null = null; // Rola użytkownika
-  showAddDoctorForm: boolean = false; // Flaga do wyświetlania formularza
-  addDoctorForm: FormGroup; // Formularz dodawania lekarza
+  userRole: string | null = null;
+  showAddDoctorForm: boolean = false; 
+  addDoctorForm: FormGroup; 
   isLoggedIn: boolean = false;
 
   constructor(private doctorService: DoctorService, private fb: FormBuilder) {
@@ -20,12 +20,13 @@ export class DoctorListComponent implements OnInit {
       specialization: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.loadDoctors();
-    this.userRole = JSON.parse(localStorage.getItem('user') || '{}').role; // Pobierz rolę użytkownika
+    this.userRole = JSON.parse(localStorage.getItem('user') || '{}').role; 
     this.isLoggedIn = !(this.userRole == '{}');
   }
 
@@ -42,22 +43,26 @@ export class DoctorListComponent implements OnInit {
   }
 
   toggleAddDoctorForm(): void {
-    this.showAddDoctorForm = !this.showAddDoctorForm; // Przełącz widoczność formularza
+    this.showAddDoctorForm = !this.showAddDoctorForm; 
   }
 
   onSubmitAddDoctor(): void {
+    console.log('Stan formularza:', this.addDoctorForm.valid);
+  console.log('Wartości formularza:', this.addDoctorForm.value);
+
     if (this.addDoctorForm.invalid) {
       alert('Wypełnij wszystkie wymagane pola.');
       return;
     }
-
-    const doctor: Doctor = this.addDoctorForm.value;
+  
+    const doctor = this.addDoctorForm.value;
+  
     this.doctorService.addDoctor(doctor).subscribe({
       next: () => {
         alert('Lekarz został dodany.');
         this.loadDoctors();
         this.addDoctorForm.reset();
-        this.showAddDoctorForm = false; // Ukryj formularz po dodaniu lekarza
+        this.showAddDoctorForm = false; 
       },
       error: (err) => {
         console.error('Błąd podczas dodawania lekarza:', err);
@@ -65,6 +70,7 @@ export class DoctorListComponent implements OnInit {
       },
     });
   }
+  
 
   deleteDoctor(doctorId: string): void {
     const confirmDelete = confirm('Czy na pewno chcesz usunąć tego lekarza?');

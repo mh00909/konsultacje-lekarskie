@@ -20,37 +20,44 @@
 
   <h3>Przeszłe wizyty</h3>
   <ul *ngIf="pastReservations.length > 0">
-    <li *ngFor="let reservation of pastReservations">
+    <li *ngFor="let reservation of pastReservations" class="past-visits">
       <div class="reservation-details">
         <p><strong>Typ:</strong> {{ reservation.type }}</p>
         <p><strong>Data:</strong> {{ reservation.date }}</p>
         <p><strong>Godzina:</strong> {{ reservation.startTime }}</p>
         <p><strong>Lekarz:</strong> {{ reservation.doctorName }}</p>
       </div>
-      
-      <!-- Formularz oceny -->
-      
 
-
-      <div *ngIf="!reservation.isReviewed" class="review-form">
-        <h4>Dodaj opinię</h4>
-        <label>
-          Ocena:
-          <select #rating>
-            <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">{{ star }}</option>
-          </select>
-        </label>
-        <label>
-          Komentarz:
-          <textarea #comment></textarea>
-        </label>
-        <!-- Wymuszamy konwersję rating.value na liczbę -->
-        <button (click)="addReview(reservation, +rating.value, comment.value)">Dodaj opinię</button>
+      <div *ngIf="reservation.isReviewed" class="review-details">
+        <h5>Twoja opinia</h5>
+        <p><strong>Ocena:</strong> {{ reservation.review.rating }}/5</p>
+        <p><strong>Komentarz:</strong> {{ reservation.review.comment }}</p>
       </div>
 
-      
-      
-      <p *ngIf="reservation.isReviewed">Dziękujemy za Twoją opinię!</p>
+<div *ngIf="!reservation.isReviewed" class="review-form">
+  <h5>Dodaj opinię</h5>
+
+  <div *ngIf="isBanned">
+    <p class="banned-message">Nie możesz dodawać opinii, ponieważ zostałeś zbanowany.</p>
+  </div>
+
+  <div *ngIf="!isBanned" class="add-opinion-container">
+    <label>
+      Ocena:
+      <select #rating>
+        <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">{{ star }}</option>
+      </select>
+    </label>
+    <label>
+      Komentarz:<br>
+      <textarea #comment></textarea>
+    </label>
+    <button (click)="addReview(reservation, +rating.value, comment.value)">Dodaj opinię</button>
+  </div>
+</div>
+
+
+
     </li>
   </ul>
 

@@ -35,6 +35,7 @@ export class CalendarComponent implements OnInit {
   availabilities: any[] = [];
   currentWeekStart: Date = this.getStartOfWeek(new Date());
   doctorId: string | null = null;
+  doctorName: string = 'Nieznany lekarz';
   userId: string | null = null;
 
   selectedDetails: any = null;
@@ -69,6 +70,15 @@ export class CalendarComponent implements OnInit {
   
     dataSource.getData('reservations').subscribe(data => {
       this.reservations = data.filter(r => r.doctorId === this.doctorId);
+    });
+
+    dataSource.getData('doctors').subscribe(doctors => {
+      const doctor = doctors.find(doc => doc.id === this.doctorId);
+      if (doctor) {
+        this.doctorName = doctor.name;
+      } else {
+        console.warn('Nie znaleziono lekarza dla podanego ID:', this.doctorId);
+      }
     });
   }
   
@@ -126,16 +136,16 @@ export class CalendarComponent implements OnInit {
       return;
     }
     if (this.isProcessing) {
-      return; // Zablokuj wielokrotne kliknięcia
+      return; 
     }
   
     const date = this.getDateForDay(this.days.indexOf(day));
     const status = this.getSlotStatus(day, time);
   
     if (status === 'available') {
-      this.isProcessing = true; // Zablokuj dalsze kliknięcia
+      this.isProcessing = true; 
       this.router.navigate(['/reservation'], { queryParams: { date, time, doctorId: this.doctorId } }).then(() => {
-        this.isProcessing = false; // Odblokuj po zakończeniu 
+        this.isProcessing = false; 
       });
     } else if (status === 'reserved') {
       const reservation = this.reservations.find(
@@ -169,7 +179,6 @@ export class CalendarComponent implements OnInit {
   
     dataSource.removeData('reservations', reservation.id).subscribe({
       next: () => {
-        // Usunięcie rezerwacji z lokalnej listy 
         this.reservations = this.reservations.filter(r => r.id !== reservation.id);
         alert('Rezerwacja została anulowana.');
       },
@@ -263,7 +272,7 @@ export class CalendarComponent implements OnInit {
     );
   
     if (reservation && this.isSlotAbsent(day)) {
-      return '#ff0000'; // Kolor czerwony dla odwołanych
+      return '#ff0000'; // czerwony dla odwołanych
     }
     if (reservation && this.isPastReservation(date, time)) {
       return CONSULTATION_COLORS['Przeszła'];
@@ -273,7 +282,7 @@ export class CalendarComponent implements OnInit {
       return CONSULTATION_COLORS[reservation.type] || '#cccccc';
     }
   
-    return '#ffffff'; // Domyślny kolor dla wolnych slotów
+    return '#ffffff'; 
   }
   
 

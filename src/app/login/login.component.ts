@@ -27,7 +27,7 @@ export class LoginComponent {
         localStorage.setItem('userEmail', user.email);
         localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role, userId: user.id }));
 
-        location.reload()
+      //  location.reload()
         location.replace('/home')
       },
       error: (err) => alert(`Błąd: ${err.message}`)
